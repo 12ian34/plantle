@@ -3,11 +3,10 @@
 
   export let value = '';
 
-  var index_word = 1;
-  var index_letter = 1;
-  var current_letter = 'letter_' + index_word + '_' + index_letter;
+  let index_word = 0;
+  let index_letter = 0;
 
-  var board = [
+  let board = [
     ['', '', '', '', ''],
     ['', '', '', '', ''],
     ['', '', '', '', ''],
@@ -19,72 +18,77 @@
   const dispatch = createEventDispatcher();
 
   function enter(letter) {
-    console.log(letter);
-    console.log(current_letter);
     console.log(index_word);
     console.log(index_letter);
+    console.log(letter);
+
     board[index_word][index_letter] = letter;
+
     if (index_letter == 5) {
-      index_letter = 1;
+      index_letter = 0;
       index_word += 1;
+    } else {
+      index_letter += 1;
     }
-    index_letter += 1;
-    console.log(letter);
-    console.log(current_letter);
-    console.log(index_word);
-    console.log(index_letter);
   }
 
   const clear = () => (value = '');
   const submit = () => dispatch('submit');
+
+  let m = { x: 0, y: 0 };
+
+  function handleMousemove(event) {
+    m.x = event.clientX;
+    m.y = event.clientY;
+  }
 </script>
 
 <div class="wordRow">
-  <button id="letter_1_1"> {board[0][0]}</button>
-  <button id="letter_1_2"> {board[0][1]}</button>
-  <button id="letter_1_3"> {board[0][2]}</button>
-  <button id="letter_1_4"> {board[0][3]}</button>
-  <button id="letter_1_5"> {board[0][4]}</button>
+  <button>{board[0][0]}</button>
+  <button>{board[0][1]}</button>
+  <button>{board[0][2]}</button>
+  <button>{board[0][3]}</button>
+  <button>{board[0][4]}</button>
 </div>
 
 <div class="wordRow">
-  <button id="letter_2_1"> {board[1][0]}</button>
-  <button id="letter_2_2"> {board[1][1]}</button>
-  <button id="letter_2_3"> {board[1][2]}</button>
-  <button id="letter_2_4"> {board[1][3]}</button>
-  <button id="letter_2_5"> {board[1][4]}</button>
+  <button>{board[1][0]}</button>
+  <button>{board[1][1]}</button>
+  <button>{board[1][2]}</button>
+  <button>{board[1][3]}</button>
+  <button>{board[1][4]}</button>
 </div>
 
 <div class="wordRow">
-  <button id="letter_3_1"> {board[2][0]}</button>
-  <button id="letter_3_2"> {board[2][1]}</button>
-  <button id="letter_3_3"> {board[2][2]}</button>
-  <button id="letter_3_4"> {board[2][3]}</button>
-  <button id="letter_3_5"> {board[2][4]}</button>
+  <button>{board[2][0]}</button>
+  <button>{board[2][1]}</button>
+  <button>{board[2][2]}</button>
+  <button>{board[2][3]}</button>
+  <button>{board[2][4]}</button>
 </div>
 
 <div class="wordRow">
-  <button id="letter_4_1"> {board[3][0]}</button>
-  <button id="letter_4_2"> {board[3][1]}</button>
-  <button id="letter_4_3"> {board[3][2]}</button>
-  <button id="letter_4_4"> {board[3][3]}</button>
-  <button id="letter_4_5"> {board[3][4]}</button>
+  <button>{board[3][0]}</button>
+  <button>{board[3][1]}</button>
+  <button>{board[3][2]}</button>
+  <button>{board[3][3]}</button>
+  <button>{board[3][4]}</button>
 </div>
 
 <div class="wordRow">
-  <button id="letter_5_1"> {board[4][0]}</button>
-  <button id="letter_5_2"> {board[4][1]}</button>
-  <button id="letter_5_3"> {board[4][2]}</button>
-  <button id="letter_5_4"> {board[4][3]}</button>
-  <button id="letter_5_5"> {board[4][4]}</button>
+  <button>{board[4][0]}</button>
+  <button>{board[4][1]}</button>
+  <button>{board[4][2]}</button>
+  <button>{board[4][3]}</button>
+  <button>{board[4][4]}</button>
 </div>
 
 <div class="wordRow">
-  <button id="letter_6_1"> {board[5][0]}</button>
-  <button id="letter_6_2"> {board[5][1]}</button>
-  <button id="letter_6_3"> {board[5][2]}</button>
-  <button id="letter_6_4"> {board[5][3]}</button>
-  <button id="letter_6_5"> {board[5][4]}</button>
+  <button>{board[5][0]}</button>
+  <button>{board[5][1]}</button>
+  <button>{board[5][2]}</button>
+  <button>{board[5][3]}</button>
+  <button>{board[5][4]}</button>
 </div>
 
 <div class="keyboardRow1">
