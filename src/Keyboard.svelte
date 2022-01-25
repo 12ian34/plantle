@@ -24,7 +24,7 @@
 
     board[index_word][index_letter] = letter;
 
-    if (index_letter == 5) {
+    if (index_letter == 4) {
       index_letter = 0;
       index_word += 1;
     } else {
