@@ -92,38 +92,38 @@
 </div>
 
 <div class="keyboardRow1">
-  <button on:click={enter('q')}>q</button>
-  <button on:click={enter('w')}>w</button>
-  <button on:click={enter('e')}>e</button>
-  <button on:click={enter('r')}>r</button>
-  <button on:click={enter('t')}>t</button>
-  <button on:click={enter('y')}>y</button>
-  <button on:click={enter('u')}>u</button>
-  <button on:click={enter('i')}>i</button>
-  <button on:click={enter('o')}>o</button>
-  <button on:click={enter('p')}>p</button>
+  <button on:click={() => enter('q')}>q</button>
+  <button on:click={() => enter('w')}>w</button>
+  <button on:click={() => enter('e')}>e</button>
+  <button on:click={() => enter('r')}>r</button>
+  <button on:click={() => enter('t')}>t</button>
+  <button on:click={() => enter('y')}>y</button>
+  <button on:click={() => enter('u')}>u</button>
+  <button on:click={() => enter('i')}>i</button>
+  <button on:click={() => enter('o')}>o</button>
+  <button on:click={() => enter('p')}>p</button>
 </div>
 
 <div class="keyboardRow2">
-  <button on:click={enter('a')}>a</button>
-  <button on:click={enter('s')}>s</button>
-  <button on:click={enter('d')}>d</button>
-  <button on:click={enter('f')}>f</button>
-  <button on:click={enter('g')}>g</button>
-  <button on:click={enter('h')}>h</button>
-  <button on:click={enter('j')}>j</button>
-  <button on:click={enter('k')}>k</button>
-  <button on:click={enter('l')}>l</button>
+  <button on:click={() => enter('a')}>a</button>
+  <button on:click={() => enter('s')}>s</button>
+  <button on:click={() => enter('d')}>d</button>
+  <button on:click={() => enter('f')}>f</button>
+  <button on:click={() => enter('g')}>g</button>
+  <button on:click={() => enter('h')}>h</button>
+  <button on:click={() => enter('j')}>j</button>
+  <button on:click={() => enter('k')}>k</button>
+  <button on:click={() => enter('l')}>l</button>
 </div>
 
 <div class="keyboardRow3">
-  <button on:click={enter('z')}>z</button>
-  <button on:click={enter('x')}>x</button>
-  <button on:click={enter('c')}>c</button>
-  <button on:click={enter('v')}>v</button>
-  <button on:click={enter('b')}>b</button>
-  <button on:click={enter('n')}>n</button>
-  <button on:click={enter('m')}>m</button>
+  <button on:click={() => enter('z')}>z</button>
+  <button on:click={() => enter('x')}>x</button>
+  <button on:click={() => enter('c')}>c</button>
+  <button on:click={() => enter('v')}>v</button>
+  <button on:click={() => enter('b')}>b</button>
+  <button on:click={() => enter('n')}>n</button>
+  <button on:click={() => enter('m')}>m</button>
 </div>
 
 <div class="keyboardAction">
