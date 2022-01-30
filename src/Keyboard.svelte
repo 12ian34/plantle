@@ -1,10 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
 
-  export let value = '';
-
   let index_word = 0;
   let index_letter = 0;
+  let submitstate = 1;
 
   let board = [
     ['', '', '', '', ''],
@@ -16,6 +15,15 @@
   ];
 
   const dispatch = createEventDispatcher();
+
+  function handleSubmit() {
+    alert(`submitted ${pin}`);
+  }
+
+  function clear() {
+    board[index_word] = ['', '', '', '', ''];
+    index_letter = 0;
+  }
 
   function enter(letter) {
     console.log(index_word);
@@ -32,7 +40,6 @@
     }
   }
 
-  const clear = () => (value = '');
   const submit = () => dispatch('submit');
 
   let m = { x: 0, y: 0 };
@@ -92,43 +99,26 @@
 </div>
 
 <div class="keyboardRow1">
-  <button on:click={() => enter('q')}>q</button>
-  <button on:click={() => enter('w')}>w</button>
-  <button on:click={() => enter('e')}>e</button>
-  <button on:click={() => enter('r')}>r</button>
-  <button on:click={() => enter('t')}>t</button>
-  <button on:click={() => enter('y')}>y</button>
-  <button on:click={() => enter('u')}>u</button>
-  <button on:click={() => enter('i')}>i</button>
-  <button on:click={() => enter('o')}>o</button>
-  <button on:click={() => enter('p')}>p</button>
+  {#each 'qwertyuiop'.split('') as letter}
+    <button on:click={() => enter(letter)}>{letter}</button>
+  {/each}
 </div>
 
 <div class="keyboardRow2">
-  <button on:click={() => enter('a')}>a</button>
-  <button on:click={() => enter('s')}>s</button>
-  <button on:click={() => enter('d')}>d</button>
-  <button on:click={() => enter('f')}>f</button>
-  <button on:click={() => enter('g')}>g</button>
-  <button on:click={() => enter('h')}>h</button>
-  <button on:click={() => enter('j')}>j</button>
-  <button on:click={() => enter('k')}>k</button>
-  <button on:click={() => enter('l')}>l</button>
+  {#each 'asdfghjkl'.split('') as letter}
+    <button on:click={() => enter(letter)}>{letter}</button>
+  {/each}
 </div>
 
 <div class="keyboardRow3">
-  <button on:click={() => enter('z')}>z</button>
-  <button on:click={() => enter('x')}>x</button>
-  <button on:click={() => enter('c')}>c</button>
-  <button on:click={() => enter('v')}>v</button>
-  <button on:click={() => enter('b')}>b</button>
-  <button on:click={() => enter('n')}>n</button>
-  <button on:click={() => enter('m')}>m</button>
+  {#each 'zxcvbnm'.split('') as letter}
+    <button on:click={() => enter(letter)}>{letter}</button>
+  {/each}
 </div>
 
 <div class="keyboardAction">
-  <button disabled={!value} on:click={clear}>clear</button>
-  <button disabled={!value} on:click={submit}>submit</button>
+  <button on:click={clear}>clear</button>
+  <button on:click={submit}>submit</button>
 </div>
 
 <style>
