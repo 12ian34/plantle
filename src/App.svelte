@@ -11,4 +11,4 @@
 
 <h1>{view}</h1>
 
-<Keyboard bind:value={pin} on:submit={handleSubmit} />
+<Keyboard />
