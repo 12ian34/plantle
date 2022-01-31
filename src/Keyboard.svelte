@@ -1,9 +1,11 @@
 <script>
   import { createEventDispatcher } from 'svelte';
 
-  let index_word = 0;
+  let indexWord = 0;
   let index_letter = 0;
-	let submitstate = 1;
+  let submitstate = 1;
+  let solution = 'clrss';
+  let validationIndex = 0;
 
   let board = [
     ['', '', '', '', ''],
@@ -14,96 +16,92 @@
     ['', '', '', '', ''],
   ];
 
+  let boardState = [
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+  ];
+
   function enter(letter) {
-    console.log(index_word);
+    console.log(indexWord);
     console.log(index_letter);
     console.log(letter);
-		
-		if (index_letter < 5) {
-			board[index_word][index_letter] = letter;
-			console.log(board[index_word])
-		}
-		
+
+    if (index_letter < 5) {
+      board[indexWord][index_letter] = letter;
+      console.log(board[indexWord]);
+    }
+
     if (index_letter == 5) {
-			alert("press submit when ready!")
-			index_letter = 4
+      alert('press submit when ready!');
+      index_letter = 4;
     } else {
       index_letter += 1;
     }
   }
-	
-	function clear() {
-		board[index_word] = ['', '', '', '', '']
-		index_letter = 0
-		console.log(`word: ${index_word}`)
-	}
-	
-	function submit(word) {
-		var submittedWord = word.join('')
-		var submittedWordLength = submittedWord.length
-		console.log(submittedWord)
-				console.log(submittedWordLength)
 
-	if (submittedWordLength != 5) {
-		alert("5 letter words only!");
-	} else {
-		alert(`submitted ${submittedWord}`)
-		index_word += 1
-		index_letter = 0;
-	}
-	}
+  function clear() {
+    board[indexWord] = ['', '', '', '', ''];
+    index_letter = 0;
+    console.log(`word: ${indexWord}`);
+  }
 
-	let current = 'foo';
+  function validateWord(letter) {
+    console.log(letter);
+    console.log(solution.charAt(validationIndex));
+    if (solution.charAt(validationIndex) == letter) {
+      console.log('letter correct!');
+      console.log('state' + boardState);
+      console.log('indexWord' + indexWord);
+      console.log('validation index' + validationIndex);
+      boardState[indexWord][validationIndex] = 'correct';
+      console.log(boardState);
+    } else if (solution.includes(letter)) {
+      boardState[indexWord][validationIndex] = 'present';
+    }
+    validationIndex += 1;
+  }
+
+  function submit(word) {
+    var wordString = word.join('');
+    var wordStringLength = wordString.length;
+    alert('submitted: ' + wordString);
+    fetch('https://wordsapiv1.p.rapidapi.com/words/' + wordString, {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
+        'x-rapidapi-key': process.env.WORDSAPI_KEY,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        word.forEach(validateWord);
+        indexWord += 1;
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(
+          "'" + wordString + "'" + ' not found in dictionary. try a real word!'
+        );
+        return [];
+      });
+  }
 </script>
 
-<div id="row" >
-<div id="wordRow" class:selected="{index_word === 0}">
-  <button>{board[0][0]}</button>
-  <button>{board[0][1]}</button>
-  <button>{board[0][2]}</button>
-  <button>{board[0][3]}</button>
-  <button>{board[0][4]}</button>
-</div>
-</div>
-
-<div id="wordRow" class:selected="{index_word === 1}">
-  <button>{board[1][0]}</button>
-  <button>{board[1][1]}</button>
-  <button>{board[1][2]}</button>
-  <button>{board[1][3]}</button>
-  <button>{board[1][4]}</button>
-</div>
-
-<div id="wordRow" class:selected="{index_word === 2}">
-  <button>{board[2][0]}</button>
-  <button>{board[2][1]}</button>
-  <button>{board[2][2]}</button>
-  <button>{board[2][3]}</button>
-  <button>{board[2][4]}</button>
-</div>
-
-<div id="wordRow" class:selected="{index_word === 3}">
-  <button>{board[3][0]}</button>
-  <button>{board[3][1]}</button>
-  <button>{board[3][2]}</button>
-  <button>{board[3][3]}</button>
-  <button>{board[3][4]}</button>
-</div>
-
-<div id="wordRow" class:selected="{index_word === 4}">
-  <button>{board[4][0]}</button>
-  <button>{board[4][1]}</button>
-  <button>{board[4][2]}</button>
-  <button>{board[4][3]}</button>
-  <button>{board[4][4]}</button>
-</div>
-
-<div id="wordRow" class:selected="{index_word === 5}">
-  <button>{board[5][0]}</button>
-  <button>{board[5][1]}</button>
-  <button>{board[5][2]}</button>
-  <button>{board[5][3]}</button>
-  <button>{board[5][4]}</button>
+<div id="row">
+  {#each Array(6) as _, i}
+    <div id="wordRow" class:selected={indexWord === i}>
+      {#each Array(5) as _, j}
+        <button
+          class:correct={boardState[i][j] === 'correct'}
+          class:present={boardState[i][j] === 'present'}>{board[i][j]}</button
+        >
+      {/each}
+    </div>
+  {/each}
 </div>
 
 <div class="keyboardRow1">
@@ -126,7 +124,7 @@
 
 <div class="keyboardAction">
   <button on:click={clear}>clear</button>
-  <button on:click={() => submit(board[index_word])}>submit</button>
+  <button on:click={() => submit(board[indexWord])}>submit</button>
 </div>
 
 <style>
@@ -136,18 +134,26 @@
     grid-template-columns: repeat(5, 2em);
     grid-template-rows: repeat(1, 3em);
     grid-gap: 0.1em;
-		color: green
+    color: green;
   }
 
-	.selected {
+  .selected {
     font-size: 1.5em;
     display: grid;
     grid-template-columns: repeat(5, 2em);
     grid-template-rows: repeat(1, 3em);
     grid-gap: 0.1em;
-		background-color: #f6f6f6;
-		color: green;
-	}
+    background-color: #f6f6f6;
+    color: green;
+  }
+
+  .correct {
+    color: green;
+  }
+
+  .present {
+    color: orange;
+  }
 
   .keyboardRow1,
   .keyboardRow2,
@@ -165,5 +171,4 @@
   .keyboardRow3 {
     margin-left: 4.8em;
   }
-
 </style>
