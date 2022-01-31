@@ -1,10 +1,7 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-
   let indexWord = 0;
   let index_letter = 0;
-  let submitstate = 1;
-  let solution = 'clrss';
+  let solution = 'daisy';
   let validationIndex = 0;
 
   let board = [
@@ -67,7 +64,6 @@
 
   function submit(word) {
     var wordString = word.join('');
-    var wordStringLength = wordString.length;
     alert('submitted: ' + wordString);
     fetch('https://wordsapiv1.p.rapidapi.com/words/' + wordString, {
       method: 'GET',
