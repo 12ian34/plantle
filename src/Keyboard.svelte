@@ -49,6 +49,9 @@
       console.log('letter ' + "'" + letter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
     }
+    if (boardState == ['correct', 'correct', 'correct', 'correct', 'correct']) {
+      alert('congratulations');
+    }
     validationIndex += 1;
   }
 
