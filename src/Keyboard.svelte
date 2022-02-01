@@ -88,7 +88,7 @@
     if (wordString == 'kuntz') {
       alert('nice try dan');
     }
-    if (wordString == 'Nicee') {
+    if (wordString == 'nicee') {
       alert('nicee try');
     }
     const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
