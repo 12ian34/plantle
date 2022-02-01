@@ -1,9 +1,14 @@
 <script>
+  // SPOILER
+  // i have the answer client-side for the time being
+  // just don't look here
   let indexWord = 0;
   let index_letter = 0;
   let solution = 'asian';
   let validationIndex = 0;
   let wordString;
+  let correctLetters = [];
+  let presentLetters = [];
 
   let board = [
     ['', '', '', '', ''],
@@ -42,11 +47,15 @@
 
   function validateWord(letter) {
     if (solution.charAt(validationIndex) == letter) {
+      // correct letter
       console.log('letter ' + "'" + letter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
+      correctLetters.push(letter);
     } else if (solution.includes(letter)) {
+      // present letter
       console.log('letter ' + "'" + letter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
+      presentLetters.push(letter);
     }
     validationIndex += 1;
   }
@@ -95,6 +104,9 @@
       word.forEach(validateWord);
       checkSuccess('correct');
     }
+    console.log(correctLetters);
+    console.log(presentLetters);
+    console.log(presentLetters.includes('i'));
   }
 </script>
 
@@ -112,23 +124,39 @@
     {/each}
   </div>
 
-  <div class="keyboardRow1">
+  <br />
+
+  <div id="keyboardRow1">
     {#each 'qwertyuiop'.split('') as letter}
-      <button on:click={() => enter(letter)}>{letter}</button>
+      <button
+        on:click={() => enter(letter)}
+        class:correct={correctLetters.includes(letter)}
+        class:present={presentLetters.includes(letter)}>{letter}</button
+      >
     {/each}
   </div>
 
-  <div class="keyboardRow2">
+  <div id="keyboardRow2">
     {#each 'asdfghjkl'.split('') as letter}
-      <button on:click={() => enter(letter)}>{letter}</button>
+      <button
+        on:click={() => enter(letter)}
+        class:correct={correctLetters.includes(letter)}
+        class:present={presentLetters.includes(letter)}>{letter}</button
+      >
     {/each}
   </div>
 
-  <div class="keyboardRow3">
+  <div id="keyboardRow3">
     {#each 'zxcvbnm'.split('') as letter}
-      <button on:click={() => enter(letter)}>{letter}</button>
+      <button
+        on:click={() => enter(letter)}
+        class:correct={correctLetters.includes(letter)}
+        class:present={presentLetters.includes(letter)}>{letter}</button
+      >
     {/each}
   </div>
+
+  <br />
 
   <div class="keyboardAction">
     <button on:click={clear}>clear</button>
@@ -160,6 +188,16 @@
     color: green;
   }
 
+  #keyboardRow1,
+  #keyboardRow2,
+  #keyboardRow3 {
+    display: grid;
+    grid-template-columns: repeat(10, 2em);
+    grid-template-rows: repeat(1, 3em);
+    grid-gap: 0.4em;
+    max-width: 100%;
+  }
+
   .correct {
     color: green;
   }
@@ -168,21 +206,11 @@
     color: orange;
   }
 
-  .keyboardRow1,
-  .keyboardRow2,
-  .keyboardRow3 {
-    display: grid;
-    grid-template-columns: repeat(10, 3em);
-    grid-template-rows: repeat(1, 3em);
-    grid-gap: 0.2em;
-    max-width: 100%;
+  #keyboardRow2 {
+    margin-left: 1.1em;
   }
 
-  .keyboardRow2 {
-    margin-left: 1.6em;
-  }
-
-  .keyboardRow3 {
-    margin-left: 4.8em;
+  #keyboardRow3 {
+    margin-left: 3.3em;
   }
 </style>
