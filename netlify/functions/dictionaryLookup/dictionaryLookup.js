@@ -21,6 +21,8 @@ exports.handler = async function (event, context) {
       },
     });
 
+    console.log(response);
+
     if (!response.ok) {
       return { statusCode: response.status, body: response.statusText };
     }
