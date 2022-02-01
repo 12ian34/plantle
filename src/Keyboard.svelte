@@ -44,16 +44,9 @@
     if (solution.charAt(validationIndex) == letter) {
       console.log('letter ' + "'" + letter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
-      console.log(boardState);
     } else if (solution.includes(letter)) {
       console.log('letter ' + "'" + letter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
-    }
-    if (
-      boardState[indexWord] ==
-      ['correct', 'correct', 'correct', 'correct', 'correct']
-    ) {
-      alert('congratulations');
     }
     validationIndex += 1;
   }
@@ -61,6 +54,24 @@
   function stringifyWord(word) {
     wordString = word.join('');
     return wordString;
+  }
+
+  function checkSuccess(correct) {
+    var count = 0;
+    for (var i = 0; i < boardState[indexWord].length; i++) {
+      if (boardState[indexWord][i] === correct) {
+        count++;
+      }
+    }
+    if (count == 5) {
+      alert('congratulations');
+      return true;
+    } else {
+      indexWord += 1;
+      index_letter = 0;
+      validationIndex = 0;
+      return false;
+    }
   }
 
   async function submit(word) {
@@ -81,21 +92,9 @@
       );
     } else {
       // word matched dictionary
-      console.log("'" + wordString + "'" + ' found in dictionary!');
       word.forEach(validateWord);
-      console.log('indexWord ' + indexWord);
-
-      indexWord += 1;
-      index_letter = 0;
-      validationIndex = 0;
-      console.log('indexWord ' + indexWord);
-      console.log('validationIndex ' + validationIndex);
-      console.log('boardState ' + boardState);
-      console.log('index_letter ' + index_letter);
-      console.log(boardState);
-      console.log(board);
+      checkSuccess('correct');
     }
-    console.log(response);
   }
 </script>
 
