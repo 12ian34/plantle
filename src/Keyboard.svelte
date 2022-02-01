@@ -62,28 +62,38 @@
     validationIndex += 1;
   }
 
-  function submit(word) {
+  // function submitold(word) {
+  //   var wordString = word.join('');
+  //   alert('submitted: ' + wordString);
+  //   fetch('https://wordsapiv1.p.rapidapi.com/words/' + wordString, {
+  //     method: 'GET',
+  //     headers: {
+  //       'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
+  //       'x-rapidapi-key': process.env.WORDSAPI_KEY,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       word.forEach(validateWord);
+  //       indexWord += 1;
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert(
+  //         "'" + wordString + "'" + ' not found in dictionary. try a real word!'
+  //       );
+  //       return [];
+  //     });
+  // }
+
+  async function submit(word) {
     var wordString = word.join('');
     alert('submitted: ' + wordString);
-    fetch('https://wordsapiv1.p.rapidapi.com/words/' + wordString, {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
-        'x-rapidapi-key': process.env.WORDSAPI_KEY,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        word.forEach(validateWord);
-        indexWord += 1;
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(
-          "'" + wordString + "'" + ' not found in dictionary. try a real word!'
-        );
-        return [];
-      });
+    const response = await fetch(
+      `/.netlify/functions/dictionaryLookup?word=${wordString}`
+    );
+    const data = await response.json();
+    console.log(data);
   }
 </script>
 
