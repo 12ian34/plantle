@@ -3,6 +3,7 @@
   let index_letter = 0;
   let solution = 'daisy';
   let validationIndex = 0;
+  let wordString;
 
   let board = [
     ['', '', '', '', ''],
@@ -80,16 +81,17 @@
   //     });
   // }
 
+  function stringifyWord(word) {
+    wordString = word.join('');
+    return wordString;
+  }
+
   async function submit(word) {
-    console.log(word);
-    console.log(wordString);
-    var wordString = word.join('');
+    wordString = stringifyWord(word);
     alert('submitted: ' + wordString);
-    const response = await fetch(
-      `/.netlify/functions/dictionaryLookup?wordString=${wordString}`
-    );
+    const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
+    const response = await fetch(requestUrl);
     const data = await response;
-    console.log(data);
   }
 </script>
 
