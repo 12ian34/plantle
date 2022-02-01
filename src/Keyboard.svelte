@@ -91,7 +91,8 @@
     alert('submitted: ' + wordString);
     const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
     const response = await fetch(requestUrl);
-    const data = await response;
+    const data = await response.json();
+    console.log(data);
   }
 </script>
 
