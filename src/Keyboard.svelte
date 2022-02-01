@@ -25,7 +25,6 @@
   function enter(letter) {
     if (index_letter < 5) {
       board[indexWord][index_letter] = letter;
-      console.log(board[indexWord]);
     }
 
     if (index_letter == 5) {
@@ -39,7 +38,6 @@
   function clear() {
     board[indexWord] = ['', '', '', '', ''];
     index_letter = 0;
-    console.log(`word: ${indexWord}`);
   }
 
   function validateWord(letter) {
@@ -90,7 +88,7 @@
     const response = await fetch(
       `/.netlify/functions/dictionaryLookup?wordString=${wordString}`
     );
-    const data = await response.json();
+    const data = await response;
     console.log(data);
   }
 </script>

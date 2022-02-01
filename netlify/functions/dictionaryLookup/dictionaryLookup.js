@@ -10,10 +10,10 @@ exports.handler = async function (event, context) {
 
   try {
     console.log(WORDSAPI_WITH_WORD_URL);
-    console.log(WORDSAPI_KEY);
     console.log(wordString);
 
     const response = await fetch(WORDSAPI_WITH_WORD_URL, {
+      method: 'GET',
       headers: {
         // Accept: 'application/json',
         'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
