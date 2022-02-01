@@ -23,10 +23,6 @@
   ];
 
   function enter(letter) {
-    console.log(indexWord);
-    console.log(index_letter);
-    console.log(letter);
-
     if (index_letter < 5) {
       board[indexWord][index_letter] = letter;
       console.log(board[indexWord]);
@@ -87,10 +83,12 @@
   // }
 
   async function submit(word) {
+    console.log(word);
+    console.log(wordString);
     var wordString = word.join('');
     alert('submitted: ' + wordString);
     const response = await fetch(
-      `/.netlify/functions/dictionaryLookup?word=${wordString}`
+      `/.netlify/functions/dictionaryLookup?wordString=${wordString}`
     );
     const data = await response.json();
     console.log(data);
