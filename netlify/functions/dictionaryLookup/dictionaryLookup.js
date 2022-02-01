@@ -8,9 +8,8 @@ exports.handler = async function (event, context) {
   const wordString = event.queryStringParameters.wordString;
   const WORDSAPI_WITH_WORD_URL = WORDSAPI_URL + '/' + wordString;
 
-  console.log(WORDSAPI_URL);
+  // log searched word in netlify
   console.log(wordString);
-  console.log(WORDSAPI_WITH_WORD_URL);
 
   try {
     const response = await fetch(WORDSAPI_WITH_WORD_URL, {
