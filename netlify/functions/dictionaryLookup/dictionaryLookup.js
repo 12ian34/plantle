@@ -6,7 +6,7 @@ exports.handler = async function (event, context) {
 
   const WORDSAPI_URL = 'https://wordsapiv1.p.rapidapi.com/words';
   const wordString = event.queryStringParameters;
-  const WORDSAPI_WITH_WORD_URL = `${WORDSAPI_URL}/${wordString}`;
+  const WORDSAPI_WITH_WORD_URL = WORDSAPI_URL + '/' + wordString;
 
   try {
     console.log(WORDSAPI_WITH_WORD_URL);
