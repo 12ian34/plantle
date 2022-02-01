@@ -1,7 +1,7 @@
 <script>
   let indexWord = 0;
   let index_letter = 0;
-  let solution = 'daisy';
+  let solution = 'asian';
   let validationIndex = 0;
   let wordString;
 
@@ -29,7 +29,6 @@
     }
 
     if (index_letter == 5) {
-      alert('press submit when ready!');
       index_letter = 4;
     } else {
       index_letter += 1;
@@ -42,44 +41,16 @@
   }
 
   function validateWord(letter) {
-    console.log(letter);
-    console.log(solution.charAt(validationIndex));
     if (solution.charAt(validationIndex) == letter) {
-      console.log('letter correct!');
-      console.log('state' + boardState);
-      console.log('indexWord' + indexWord);
-      console.log('validation index' + validationIndex);
+      console.log('letter ' + "'" + letter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
       console.log(boardState);
     } else if (solution.includes(letter)) {
+      console.log('letter ' + "'" + letter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
     }
     validationIndex += 1;
   }
-
-  // function submitold(word) {
-  //   var wordString = word.join('');
-  //   alert('submitted: ' + wordString);
-  //   fetch('https://wordsapiv1.p.rapidapi.com/words/' + wordString, {
-  //     method: 'GET',
-  //     headers: {
-  //       'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
-  //       'x-rapidapi-key': process.env.WORDSAPI_KEY,
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       word.forEach(validateWord);
-  //       indexWord += 1;
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       alert(
-  //         "'" + wordString + "'" + ' not found in dictionary. try a real word!'
-  //       );
-  //       return [];
-  //     });
-  // }
 
   function stringifyWord(word) {
     wordString = word.join('');
@@ -88,11 +59,37 @@
 
   async function submit(word) {
     wordString = stringifyWord(word);
-    alert('submitted: ' + wordString);
     const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
     const response = await fetch(requestUrl);
-    const data = await response.json();
-    console.log(data);
+    const data = await response;
+    if (response.statusText == 'Not Found') {
+      // word not found
+      alert(
+        "'" + wordString + "'" + ' not found in dictionary. try a real word!'
+      );
+      clear();
+    } else if (response.status != 200) {
+      // other error
+      alert(
+        'something else went seriously wrong. contact ian to fix providing current time, the word you tried and what happened!'
+      );
+    } else {
+      // word matched dictionary
+      console.log("'" + wordString + "'" + ' found in dictionary!');
+      word.forEach(validateWord);
+      console.log('indexWord ' + indexWord);
+
+      indexWord += 1;
+      index_letter = 0;
+      validationIndex = 0;
+      console.log('indexWord ' + indexWord);
+      console.log('validationIndex ' + validationIndex);
+      console.log('boardState ' + boardState);
+      console.log('index_letter ' + index_letter);
+      console.log(boardState);
+      console.log(board);
+    }
+    console.log(response);
   }
 </script>
 
