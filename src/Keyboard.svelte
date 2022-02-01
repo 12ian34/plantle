@@ -73,7 +73,7 @@
       }
     }
     if (count == 5) {
-      alert('congratulations');
+      alert('🌽🌽🌽 congratulations 🌽🌽🌽');
       return true;
     } else {
       indexWord += 1;
@@ -85,9 +85,14 @@
 
   async function submit(word) {
     wordString = stringifyWord(word);
+    if (wordString == 'kuntz') {
+      alert('nice try dan');
+    }
+    if (wordString == 'Nicee') {
+      alert('nicee try');
+    }
     const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
     const response = await fetch(requestUrl);
-    const data = await response;
     if (response.statusText == 'Not Found') {
       // word not found
       alert(
@@ -173,7 +178,7 @@
     font-size: 1.5em;
     display: grid;
     grid-template-columns: repeat(5, 2em);
-    grid-template-rows: repeat(1, 3em);
+    grid-template-rows: repeat(1, 2.5em);
     grid-gap: 0.1em;
     color: green;
   }
