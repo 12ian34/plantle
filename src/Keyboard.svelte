@@ -98,43 +98,49 @@
   }
 </script>
 
-<div id="row">
-  {#each Array(6) as _, i}
-    <div id="wordRow" class:selected={indexWord === i}>
-      {#each Array(5) as _, j}
-        <button
-          class:correct={boardState[i][j] === 'correct'}
-          class:present={boardState[i][j] === 'present'}>{board[i][j]}</button
-        >
-      {/each}
-    </div>
-  {/each}
-</div>
+<div class="container size">
+  <div id="row">
+    {#each Array(6) as _, i}
+      <div id="wordRow" class:selected={indexWord === i}>
+        {#each Array(5) as _, j}
+          <button
+            class:correct={boardState[i][j] === 'correct'}
+            class:present={boardState[i][j] === 'present'}>{board[i][j]}</button
+          >
+        {/each}
+      </div>
+    {/each}
+  </div>
 
-<div class="keyboardRow1">
-  {#each 'qwertyuiop'.split('') as letter}
-    <button on:click={() => enter(letter)}>{letter}</button>
-  {/each}
-</div>
+  <div class="keyboardRow1">
+    {#each 'qwertyuiop'.split('') as letter}
+      <button on:click={() => enter(letter)}>{letter}</button>
+    {/each}
+  </div>
 
-<div class="keyboardRow2">
-  {#each 'asdfghjkl'.split('') as letter}
-    <button on:click={() => enter(letter)}>{letter}</button>
-  {/each}
-</div>
+  <div class="keyboardRow2">
+    {#each 'asdfghjkl'.split('') as letter}
+      <button on:click={() => enter(letter)}>{letter}</button>
+    {/each}
+  </div>
 
-<div class="keyboardRow3">
-  {#each 'zxcvbnm'.split('') as letter}
-    <button on:click={() => enter(letter)}>{letter}</button>
-  {/each}
-</div>
+  <div class="keyboardRow3">
+    {#each 'zxcvbnm'.split('') as letter}
+      <button on:click={() => enter(letter)}>{letter}</button>
+    {/each}
+  </div>
 
-<div class="keyboardAction">
-  <button on:click={clear}>clear</button>
-  <button on:click={() => submit(board[indexWord])}>submit</button>
+  <div class="keyboardAction">
+    <button on:click={clear}>clear</button>
+    <button on:click={() => submit(board[indexWord])}>submit</button>
+  </div>
 </div>
 
 <style>
+  .size {
+    max-width: 1100px;
+    width: 100%;
+  }
   #wordRow {
     font-size: 1.5em;
     display: grid;
@@ -169,6 +175,7 @@
     grid-template-columns: repeat(10, 3em);
     grid-template-rows: repeat(1, 3em);
     grid-gap: 0.2em;
+    max-width: 100%;
   }
 
   .keyboardRow2 {
