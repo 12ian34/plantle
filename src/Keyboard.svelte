@@ -1,17 +1,16 @@
 <script>
+  // don't be boring and look at my source code
+
   import Time from 'svelte-time';
   let date = new Date().toISOString().slice(0, 10);
-
-  // SPOILER
-  // the answer is client-side for the time being
-  // just don't look here
   let indexWord = 0;
   let index_letter = 0;
-  let solution = 'asian';
   let validationIndex = 0;
   let wordString;
+  let usedLetters = [];
   let correctLetters = [];
   let presentLetters = [];
+  let dailyWord = getDailyWord(date);
 
   let board = [
     ['', '', '', '', ''],
@@ -49,12 +48,12 @@
   }
 
   function validateWord(letter) {
-    if (solution.charAt(validationIndex) == letter) {
+    if (dailyWord.charAt(validationIndex) == letter) {
       // correct letter
       console.log('letter ' + "'" + letter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
       correctLetters.push(letter);
-    } else if (solution.includes(letter)) {
+    } else if (dailyWord.includes(letter)) {
       // present letter
       console.log('letter ' + "'" + letter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
@@ -88,10 +87,11 @@
 
   async function getDailyWord(date) {
     const requestUrl = `/.netlify/functions/getWord?date=${date}`;
-    const response = await fetch(requestUrl);
-    console.log(response);
+    var response = await fetch(requestUrl);
+    var body = await response.json();
+    dailyWord = body.data[0].dailyWord;
+    return dailyWord;
   }
-  getDailyWord(date);
 
   async function submit(word) {
     wordString = stringifyWord(word);
