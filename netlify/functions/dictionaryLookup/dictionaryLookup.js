@@ -1,9 +1,7 @@
-/* eslint-disable */
 const fetch = require('node-fetch');
 
 exports.handler = async function (event, context) {
   const { WORDSAPI_KEY } = process.env;
-
   const WORDSAPI_URL = 'https://wordsapiv1.p.rapidapi.com/words';
   const wordString = event.queryStringParameters.wordString;
   const WORDSAPI_WITH_WORD_URL = WORDSAPI_URL + '/' + wordString;

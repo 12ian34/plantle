@@ -1,6 +1,9 @@
 <script>
+  import Time from 'svelte-time';
+  let date = new Date().toISOString().slice(0, 10);
+
   // SPOILER
-  // i have the answer client-side for the time being
+  // the answer is client-side for the time being
   // just don't look here
   let indexWord = 0;
   let index_letter = 0;
@@ -83,6 +86,13 @@
     }
   }
 
+  async function getDailyWord(date) {
+    const requestUrl = `/.netlify/functions/getWord?date=${date}`;
+    const response = await fetch(requestUrl);
+    console.log(response);
+  }
+  getDailyWord(date);
+
   async function submit(word) {
     wordString = stringifyWord(word);
     if (wordString == 'kuntz') {
@@ -102,16 +112,13 @@
     } else if (response.status != 200) {
       // other error
       alert(
-        'something else went seriously wrong. contact ian to fix providing current time, the word you tried and what happened!'
+        'something else went seriously wrong. please contact ian to fix, providing: the current time, the word you tried and what happened.'
       );
     } else {
       // word matched dictionary
       word.forEach(validateWord);
       checkSuccess('correct');
     }
-    console.log(correctLetters);
-    console.log(presentLetters);
-    console.log(presentLetters.includes('i'));
   }
 </script>
 
