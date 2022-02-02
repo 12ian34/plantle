@@ -4,9 +4,9 @@
 
 A plant-based word game with solutions restricted to the following categories:
 
-- Herbs and spices
-- Fruit, veg, beans and mushrooms
-- Flowers, bushes, trees and crops
+- herbs and spices
+- fruit, veg, beans and mushrooms
+- flowers, bushes, trees and crops
 
 # todo
 
@@ -14,3 +14,4 @@ A plant-based word game with solutions restricted to the following categories:
 - use localStorage to store results and number hints used
 - category based hints
 - allow convenient sharing
+- restrict users from playing more than once

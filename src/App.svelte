@@ -5,9 +5,9 @@
 <h1>plant-based word game</h1>
 <p>solutions are limited to:</p>
 <ul>
-  <li>Herbs and spices</li>
-  <li>Fruit, veg, beans and mushrooms</li>
-  <li>Flowers, bushes, trees and crops</li>
+  <li>herbs and spices</li>
+  <li>fruit, veg, beans and mushrooms</li>
+  <li>flowers, bushes, trees and crops</li>
 </ul>
 
 <Keyboard />
