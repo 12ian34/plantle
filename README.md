@@ -43,6 +43,7 @@ A plant-based word game with solutions restricted to the following categories:
 ## v0.4
 
 - [ ] category based hints
-- [ ] revamp styling
+- [ ] design overhaul
+- [ ] improve responsiveness
 - [ ] add more words to supabase table
 - [ ] improve logging/monitoring
