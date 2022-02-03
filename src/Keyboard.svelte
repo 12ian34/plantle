@@ -12,6 +12,7 @@
   let presentLetters = [];
   let dailyWord = getDailyWord(date);
 
+  // initialise board and board state arrays
   let board = [
     ['', '', '', '', ''],
     ['', '', '', '', ''],
@@ -30,9 +31,11 @@
     ['', '', '', '', ''],
   ];
 
-  function enter(letter) {
+  // on each letter, increment index to move on to next letter
+  // if last letter of word, stay on that letter
+  function enter(enteredLetter) {
     if (index_letter < 5) {
-      board[indexWord][index_letter] = letter;
+      board[indexWord][index_letter] = enteredLetter;
     }
 
     if (index_letter == 5) {
@@ -47,26 +50,31 @@
     index_letter = 0;
   }
 
-  function validateWord(letter) {
-    if (dailyWord.charAt(validationIndex) == letter) {
+  function validateWord(enteredLetter) {
+    if (dailyWord.charAt(validationIndex) == enteredLetter) {
       // correct letter
-      console.log('letter ' + "'" + letter + "'" + ' correct!');
+      console.log('letter ' + "'" + enteredLetter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
-      correctLetters.push(letter);
-    } else if (dailyWord.includes(letter)) {
+      correctLetters.push(enteredLetter);
+      correctLetters = correctLetters;
+    } else if (dailyWord.includes(enteredLetter)) {
       // present letter
-      console.log('letter ' + "'" + letter + "'" + ' present!');
+      console.log('letter ' + "'" + enteredLetter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
-      presentLetters.push(letter);
+      presentLetters.push(enteredLetter);
+      presentLetters = presentLetters;
     }
     validationIndex += 1;
+    console.log(correctLetters.includes(enteredLetter));
   }
 
+  // concatenate word array to string
   function stringifyWord(word) {
     wordString = word.join('');
     return wordString;
   }
 
+  // check each letter of word and update board state array
   function checkSuccess(correct) {
     var count = 0;
     for (var i = 0; i < boardState[indexWord].length; i++) {
@@ -74,10 +82,13 @@
         count++;
       }
     }
+    // if there are 5 corrects in the array, win!
     if (count == 5) {
       alert('🌽🌽🌽 congratulations 🌽🌽🌽');
       return true;
+      // TODO: do something here to end game
     } else {
+      // otherwise, move on to next word and reset validation index
       indexWord += 1;
       index_letter = 0;
       validationIndex = 0;
@@ -85,6 +96,7 @@
     }
   }
 
+  // fetch word based on today's date
   async function getDailyWord(date) {
     const requestUrl = `/.netlify/functions/getWord?date=${date}`;
     var response = await fetch(requestUrl);
@@ -93,14 +105,10 @@
     return dailyWord;
   }
 
+  // on submit of complete word
   async function submit(word) {
     wordString = stringifyWord(word);
-    if (wordString == 'kuntz') {
-      alert('nice try dan');
-    }
-    if (wordString == 'nicee') {
-      alert('nicee try');
-    }
+    // check word against dictionary
     const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
     const response = await fetch(requestUrl);
     if (response.statusText == 'Not Found') {
@@ -112,11 +120,13 @@
     } else if (response.status != 200) {
       // other error
       alert(
-        'something else went seriously wrong. please contact ian to fix, providing: the current time, the word you tried and what happened.'
+        'something else went seriously wrong. please contact to fix, providing: the current time, the word you tried and what happened.'
       );
     } else {
       // word matched dictionary
+      // now check each letter against solution
       word.forEach(validateWord);
+      // then check if solution was reached and handle
       checkSuccess('correct');
     }
   }
