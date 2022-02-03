@@ -56,13 +56,21 @@
       console.log('letter ' + "'" + enteredLetter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
       correctLetters.push(enteredLetter);
+      // reactivity is triggered by assignment only
       correctLetters = correctLetters;
     } else if (dailyWord.includes(enteredLetter)) {
       // present letter
       console.log('letter ' + "'" + enteredLetter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
       presentLetters.push(enteredLetter);
+      // reactivity is triggered by assignment only
       presentLetters = presentLetters;
+    } else {
+      // boardState[indexWord][validationIndex] = 'used';
+      // store used letter
+      usedLetters.push(enteredLetter);
+      // reactivity is triggered by assignment only
+      usedLetters = usedLetters;
     }
     validationIndex += 1;
     console.log(correctLetters.includes(enteredLetter));
@@ -139,7 +147,8 @@
         {#each Array(5) as _, j}
           <button
             class:correct={boardState[i][j] === 'correct'}
-            class:present={boardState[i][j] === 'present'}>{board[i][j]}</button
+            class:present={boardState[i][j] === 'present'}
+            class:used={boardState[i][j] === 'used'}>{board[i][j]}</button
           >
         {/each}
       </div>
@@ -153,7 +162,8 @@
       <button
         on:click={() => enter(letter)}
         class:correct={correctLetters.includes(letter)}
-        class:present={presentLetters.includes(letter)}>{letter}</button
+        class:present={presentLetters.includes(letter)}
+        class:used={usedLetters.includes(letter)}>{letter}</button
       >
     {/each}
   </div>
@@ -163,7 +173,8 @@
       <button
         on:click={() => enter(letter)}
         class:correct={correctLetters.includes(letter)}
-        class:present={presentLetters.includes(letter)}>{letter}</button
+        class:present={presentLetters.includes(letter)}
+        class:used={usedLetters.includes(letter)}>{letter}</button
       >
     {/each}
   </div>
@@ -173,7 +184,8 @@
       <button
         on:click={() => enter(letter)}
         class:correct={correctLetters.includes(letter)}
-        class:present={presentLetters.includes(letter)}>{letter}</button
+        class:present={presentLetters.includes(letter)}
+        class:used={usedLetters.includes(letter)}>{letter}</button
       >
     {/each}
   </div>
@@ -226,6 +238,10 @@
 
   .present {
     color: orange;
+  }
+
+  .used {
+    color: red;
   }
 
   #keyboardRow2 {
