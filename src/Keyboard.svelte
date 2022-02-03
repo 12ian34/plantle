@@ -3,51 +3,108 @@
 
   import Time from 'svelte-time';
   let date = new Date().toISOString().slice(0, 10);
+  let dailyWord = getDailyWord(date);
   let indexWord = 0;
-  let index_letter = 0;
+  let indexLetter = 0;
   let validationIndex = 0;
   let wordString;
   let usedLetters = [];
   let correctLetters = [];
   let presentLetters = [];
-  let dailyWord = getDailyWord(date);
+  let board;
+  let boardState;
 
-  // initialise board and board state arrays
-  let board = [
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-  ];
+  // let storedData = [
+  //   indexWord,
+  //   indexLetter,
+  //   validationIndex,
+  //   wordString,
+  //   usedLetters,
+  //   correctLetters,
+  //   presentLetters,
+  //   board,
+  //   boardState,
+  // ];
+  // storedData.forEach(getFromLocalStorage());
 
-  let boardState = [
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-  ];
+  // initialise board, state and variables
+  // getting from localStorage if present
+  if (localStorage.getItem('board') === null) {
+    board = [
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+  } else {
+    board = getFromLocalStorage('board');
+  }
+  if (localStorage.getItem('indexWord') != null) {
+    indexWord = getFromLocalStorage('indexWord');
+  }
+  if (localStorage.getItem('indexLetter') != null) {
+    indexLetter = getFromLocalStorage('indexLetter');
+  }
+  if (localStorage.getItem('validationIndex') != null) {
+    validationIndex = getFromLocalStorage('validationIndex');
+  }
+  if (localStorage.getItem('wordString') != null) {
+    wordString = getFromLocalStorage('wordString');
+  }
+  if (localStorage.getItem('usedLetters') != null) {
+    usedLetters = getFromLocalStorage('usedLetters');
+  }
+  if (localStorage.getItem('correctLetters') != null) {
+    correctLetters = getFromLocalStorage('correctLetters');
+  }
+  if (localStorage.getItem('presentLetters') != null) {
+    presentLetters = getFromLocalStorage('presentLetters');
+  }
+
+  if (localStorage.getItem('boardState') === null) {
+    boardState = [
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+    ];
+  } else {
+    boardState = getFromLocalStorage('boardState');
+  }
+
+  function getFromLocalStorage(key) {
+    return JSON.parse(localStorage.getItem(key));
+  }
+
+  function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
 
   // on each letter, increment index to move on to next letter
   // if last letter of word, stay on that letter
   function enter(enteredLetter) {
-    if (index_letter < 5) {
-      board[indexWord][index_letter] = enteredLetter;
+    if (indexLetter < 5) {
+      board[indexWord][indexLetter] = enteredLetter;
     }
 
-    if (index_letter == 5) {
-      index_letter = 4;
+    if (indexLetter == 5) {
+      indexLetter = 4;
     } else {
-      index_letter += 1;
+      indexLetter += 1;
     }
+    saveToLocalStorage('indexLetter', indexLetter);
+    saveToLocalStorage('board', board);
   }
 
   function clear() {
     board[indexWord] = ['', '', '', '', ''];
-    index_letter = 0;
+    indexLetter = 0;
+    saveToLocalStorage('indexLetter', indexLetter);
+    saveToLocalStorage('board', board);
   }
 
   function validateWord(enteredLetter) {
@@ -58,6 +115,7 @@
       correctLetters.push(enteredLetter);
       // reactivity is triggered by assignment only
       correctLetters = correctLetters;
+      saveToLocalStorage('correctLetters', correctLetters);
     } else if (dailyWord.includes(enteredLetter)) {
       // present letter
       console.log('letter ' + "'" + enteredLetter + "'" + ' present!');
@@ -65,20 +123,24 @@
       presentLetters.push(enteredLetter);
       // reactivity is triggered by assignment only
       presentLetters = presentLetters;
+      saveToLocalStorage('presentLetters', presentLetters);
     } else {
       // boardState[indexWord][validationIndex] = 'used';
       // store used letter
       usedLetters.push(enteredLetter);
       // reactivity is triggered by assignment only
       usedLetters = usedLetters;
+      saveToLocalStorage('usedLetters', usedLetters);
     }
     validationIndex += 1;
+    saveToLocalStorage('validationIndex', validationIndex);
     console.log(correctLetters.includes(enteredLetter));
   }
 
   // concatenate word array to string
   function stringifyWord(word) {
     wordString = word.join('');
+    saveToLocalStorage('wordString', wordString);
     return wordString;
   }
 
@@ -93,13 +155,17 @@
     // if there are 5 corrects in the array, win!
     if (count == 5) {
       alert('🌽🌽🌽 congratulations 🌽🌽🌽');
+      saveToLocalStorage('success', 'true');
       return true;
       // TODO: do something here to end game
     } else {
       // otherwise, move on to next word and reset validation index
       indexWord += 1;
-      index_letter = 0;
+      indexLetter = 0;
       validationIndex = 0;
+      saveToLocalStorage('indexWord', indexWord);
+      saveToLocalStorage('indexLetter', indexLetter);
+      saveToLocalStorage('validationIndex', validationIndex);
       return false;
     }
   }
@@ -134,11 +200,21 @@
       // word matched dictionary
       // now check each letter against solution
       word.forEach(validateWord);
+      // save state to localStorage]
+      console.log(typeof board);
+      saveToLocalStorage('board', board);
+      saveToLocalStorage('boardState', boardState);
       // then check if solution was reached and handle
       checkSuccess('correct');
     }
   }
+
+  function toggle() {
+    window.document.body.classList.toggle('light-mode');
+  }
 </script>
+
+<button on:click={toggle}>☀️</button>
 
 <div class="container size">
   <div id="row">
@@ -199,6 +275,15 @@
 </div>
 
 <style>
+  :global(body) {
+    background-color: #276332;
+    color: #214626;
+    transition: background-color 0.3s;
+  }
+  :global(body.light-mode) {
+    background-color: #f2eee2;
+    color: #0084f6;
+  }
   .size {
     max-width: 1100px;
     width: 100%;

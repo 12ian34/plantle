@@ -3,7 +3,7 @@
 </script>
 
 <h1>plant-based word game</h1>
-<p>solutions are limited to:</p>
+<p>you can guess any real word, BUT solutions are limited to:</p>
 <ul>
   <li>herbs and spices</li>
   <li>fruit, veg, beans and mushrooms</li>
