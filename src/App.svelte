@@ -13,68 +13,65 @@
   let presentLetters = [];
   let board;
   let boardState;
+  let lastPlayedDate;
 
-  // let storedData = [
-  //   indexWord,
-  //   indexLetter,
-  //   validationIndex,
-  //   wordString,
-  //   usedLetters,
-  //   correctLetters,
-  //   presentLetters,
-  //   board,
-  //   boardState,
-  // ];
-  // storedData.forEach(getFromLocalStorage());
+  board = [
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+  ];
 
-  // initialise board, state and variables
-  // getting from localStorage if present
-  if (localStorage.getItem('board') === null) {
-    board = [
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-    ];
-  } else {
-    board = getFromLocalStorage('board');
-  }
-  if (localStorage.getItem('indexWord') != null) {
-    indexWord = getFromLocalStorage('indexWord');
-  }
-  if (localStorage.getItem('indexLetter') != null) {
-    indexLetter = getFromLocalStorage('indexLetter');
-  }
-  if (localStorage.getItem('validationIndex') != null) {
-    validationIndex = getFromLocalStorage('validationIndex');
-  }
-  if (localStorage.getItem('wordString') != null) {
-    wordString = getFromLocalStorage('wordString');
-  }
-  if (localStorage.getItem('usedLetters') != null) {
-    usedLetters = getFromLocalStorage('usedLetters');
-  }
-  if (localStorage.getItem('correctLetters') != null) {
-    correctLetters = getFromLocalStorage('correctLetters');
-  }
-  if (localStorage.getItem('presentLetters') != null) {
-    presentLetters = getFromLocalStorage('presentLetters');
-  }
+  boardState = [
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+  ];
 
-  if (localStorage.getItem('boardState') === null) {
-    boardState = [
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-    ];
-  } else {
-    boardState = getFromLocalStorage('boardState');
+  // check if played before
+  if (localStorage.getItem('lastPlayedDate') != null) {
+    // if yes, get last played date
+    lastPlayedDate = getFromLocalStorage('lastPlayedDate');
+    // check if it is the same day
+    if (date == lastPlayedDate) {
+      // if yes, get data if present
+      // getting from localStorage if present
+      if (localStorage.getItem('board') != null) {
+        board = getFromLocalStorage('board');
+      }
+      if (localStorage.getItem('indexWord') != null) {
+        indexWord = getFromLocalStorage('indexWord');
+      }
+      if (localStorage.getItem('indexLetter') != null) {
+        indexLetter = getFromLocalStorage('indexLetter');
+      }
+      if (localStorage.getItem('validationIndex') != null) {
+        validationIndex = getFromLocalStorage('validationIndex');
+      }
+      if (localStorage.getItem('wordString') != null) {
+        wordString = getFromLocalStorage('wordString');
+      }
+      if (localStorage.getItem('usedLetters') != null) {
+        usedLetters = getFromLocalStorage('usedLetters');
+      }
+      if (localStorage.getItem('correctLetters') != null) {
+        correctLetters = getFromLocalStorage('correctLetters');
+      }
+      if (localStorage.getItem('presentLetters') != null) {
+        presentLetters = getFromLocalStorage('presentLetters');
+      }
+      if (localStorage.getItem('boardState') != null) {
+        boardState = getFromLocalStorage('boardState');
+      }
+    }
   }
+  lastPlayedDate = date;
+  saveToLocalStorage('lastPlayedDate', lastPlayedDate);
 
   function getFromLocalStorage(key) {
     return JSON.parse(localStorage.getItem(key));
@@ -110,7 +107,6 @@
   function validateWord(enteredLetter) {
     if (dailyWord.charAt(validationIndex) == enteredLetter) {
       // correct letter
-      console.log('letter ' + "'" + enteredLetter + "'" + ' correct!');
       boardState[indexWord][validationIndex] = 'correct';
       correctLetters.push(enteredLetter);
       // reactivity is triggered by assignment only
@@ -118,7 +114,6 @@
       saveToLocalStorage('correctLetters', correctLetters);
     } else if (dailyWord.includes(enteredLetter)) {
       // present letter
-      console.log('letter ' + "'" + enteredLetter + "'" + ' present!');
       boardState[indexWord][validationIndex] = 'present';
       presentLetters.push(enteredLetter);
       // reactivity is triggered by assignment only
@@ -134,7 +129,6 @@
     }
     validationIndex += 1;
     saveToLocalStorage('validationIndex', validationIndex);
-    console.log(correctLetters.includes(enteredLetter));
   }
 
   // concatenate word array to string
@@ -182,30 +176,33 @@
   // on submit of complete word
   async function submit(word) {
     wordString = stringifyWord(word);
-    // check word against dictionary
-    const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
-    const response = await fetch(requestUrl);
-    if (response.statusText == 'Not Found') {
-      // word not found
-      alert(
-        "'" + wordString + "'" + ' not found in dictionary. try a real word!'
-      );
-      clear();
-    } else if (response.status != 200) {
-      // other error
-      alert(
-        'something else went seriously wrong. please contact to fix, providing: the current time, the word you tried and what happened.'
-      );
+    if (wordString.length == 5) {
+      // check word against dictionary
+      const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
+      const response = await fetch(requestUrl);
+      if (response.statusText == 'Not Found') {
+        // word not found
+        alert(
+          "'" + wordString + "'" + ' not found in dictionary. try a real word!'
+        );
+        clear();
+      } else if (response.status != 200) {
+        // other error
+        alert(
+          'something else went seriously wrong. please contact to fix, providing: the current time, the word you tried and what happened.'
+        );
+      } else {
+        // word matched dictionary
+        // now check each letter against solution
+        word.forEach(validateWord);
+        // save state to localStorage]
+        saveToLocalStorage('board', board);
+        saveToLocalStorage('boardState', boardState);
+        // then check if solution was reached and handle
+        checkSuccess('correct');
+      }
     } else {
-      // word matched dictionary
-      // now check each letter against solution
-      word.forEach(validateWord);
-      // save state to localStorage]
-      console.log(typeof board);
-      saveToLocalStorage('board', board);
-      saveToLocalStorage('boardState', boardState);
-      // then check if solution was reached and handle
-      checkSuccess('correct');
+      alert('you must submit a full word!');
     }
   }
 
@@ -215,7 +212,7 @@
 </script>
 
 <div class="nav-top">
-  <a>plant-based word game</a>
+  <a href="https://plantle.netlify.app">plant-based word game</a>
   <div class="nav-top-right">
     <button on:click={toggle}>☀️</button>
   </div>
@@ -323,9 +320,9 @@
     display: block;
   }
 
-  #selected {
+  /* #selected {
     background-color: #286f35;
-  }
+  } */
 
   p {
     line-height: 20%;
