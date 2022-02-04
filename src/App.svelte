@@ -213,18 +213,14 @@
 
 <div class="nav-top">
   <a href="https://plantle.netlify.app">plant-based word game</a>
-  <div class="nav-top-right">
+  <!-- <div class="nav-top-right">
     <button on:click={toggle}>☀️</button>
-  </div>
+  </div> -->
 </div>
 
-<p>you can guess any real word,</p>
-<p>but solutions are limited to:</p>
-<ul>
-  <li>herbs and spices</li>
-  <li>fruit, veg, beans and mushrooms</li>
-  <li>flowers, bushes, trees and crops</li>
-</ul>
+<p>guess any real word. solutions limited to:</p>
+<p>herbs/spices/fruit/veg/beans/shrooms</p>
+<p>plants/flowers/bushes/crops/trees</p>
 
 <div id="row">
   {#each Array(6) as _, i}
@@ -303,9 +299,9 @@
     color: white;
     font-size: 1.5em;
   }
-  .nav-top-right {
+  /* .nav-top-right {
     float: right;
-  }
+  } */
   :global(body) {
     background-color: #031805;
     color: #ffffff;
