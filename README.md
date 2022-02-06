@@ -43,6 +43,7 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 
 ## v0.4
 
+- [ ] statistics
 - [ ] category based hints
 - [ ] design overhaul
 - [ ] improve responsiveness

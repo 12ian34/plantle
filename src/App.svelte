@@ -1,7 +1,6 @@
 <script>
   // don't be boring and look at my source code
   import Modal from './Modal.svelte';
-  import { createEventDispatcher } from 'svelte';
   import Time from 'svelte-time';
   let date = new Date().toISOString().slice(0, 10);
   let dailyWord = getDailyWord(date);
@@ -20,9 +19,6 @@
   let winState = false;
   let boardShareString;
   let copied = false;
-
-  const dispatch = createEventDispatcher();
-  const close = () => dispatch('close');
 
   const boardStateShareMap = {
     correct: '🟩',
