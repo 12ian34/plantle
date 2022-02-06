@@ -269,7 +269,11 @@
   <button id="submit" on:click={() => submit(board[indexWord])}>submit</button>
   <button id="clear" on:click={clear}>clear</button>
 </div>
-<p id="footer">github: <a href="https://github.com/12ian34">@12ian34</a></p>
+<p id="footer">
+  based on: <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a
+  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github:
+  <a href="https://github.com/12ian34">@12ian34</a>
+</p>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bitter&display=swap');

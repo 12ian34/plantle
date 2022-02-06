@@ -2,7 +2,7 @@
 
 # plantle
 
-A plant-based word game with solutions restricted to the following categories:
+A plant-based word game, based on [Wordle (the original)](https://www.powerlanguage.co.uk/wordle/), but with solutions restricted to the following categories:
 
 - herbs and spices
 - fruit, veg, beans and mushrooms
@@ -35,9 +35,10 @@ A plant-based word game with solutions restricted to the following categories:
 ## v0.3
 
 - [x] highlight keyboard with correct/present/used letters
-- [ ] use localStorage to store results and number hints used
-- [ ] restrict users from playing more than once
-- [ ] add credits and link to github
+- [x] use localStorage to store results and number hints used
+- [x] restrict users from playing more than once per day (aside from clearing cache)
+- [x] link to github
+- [x] new colour scheme
 - [ ] allow convenient sharing
 
 ## v0.4
@@ -47,3 +48,7 @@ A plant-based word game with solutions restricted to the following categories:
 - [ ] improve responsiveness
 - [ ] add more words to supabase table
 - [ ] improve logging/monitoring
+
+# screenshot
+
+![plantle](files/2022-02-06-0438.png 'plantle')
