@@ -327,7 +327,7 @@
 <p id="footer">
   based on: <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a
   >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github (source):
-  <a href="https://github.com/12ian34">12ian34/plantle</a>
+  <a href="https://github.com/12ian34/plantle">12ian34/plantle</a>
 </p>
 
 {#if showModal}
@@ -511,10 +511,6 @@
     color: black;
     padding: 0.5em;
   }
-
-  #modal {
-  }
-
   #modal button {
     color: black;
     /* padding: 0.5em; */
