@@ -2,6 +2,8 @@
 
 # plantle
 
+https://plantle.netlify.app
+
 A plant-based word game, based on [Wordle (the original)](https://www.powerlanguage.co.uk/wordle/), but with solutions restricted to the following categories:
 
 - herbs and spices
@@ -52,4 +54,4 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 
 # screenshot
 
-![plantle](files/2022-02-06-0438.png 'plantle')
+![plantle](files/2022-02-06-2026.png 'plantle')
