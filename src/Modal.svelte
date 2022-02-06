@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher, onDestroy } from 'svelte';
+  import { fly } from 'svelte/transition';
 
   const dispatch = createEventDispatcher();
   const close = () => dispatch('close');
@@ -40,7 +41,13 @@
 
 <svelte:window on:keydown={handle_keydown} />
 
-<div class="modal-background" on:click={close} />
+<div
+  class="modal-background"
+  on:click={close}
+  transition:fly={{ y: 0, duration: 250 }}
+  on:introstart
+  on:outroend
+/>
 
 <div class="modal" role="dialog" aria-modal="true" bind:this={modal}>
   <slot name="header" />

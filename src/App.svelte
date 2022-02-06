@@ -2,6 +2,8 @@
   // don't be boring and look at my source code
   import Modal from './Modal.svelte';
   import Time from 'svelte-time';
+  import { fly } from 'svelte/transition';
+
   let date = new Date().toISOString().slice(0, 10);
   let dailyWord = getDailyWord(date);
   let indexWord = 0;
@@ -332,7 +334,7 @@
 
 {#if showModal}
   <Modal on:close={() => ((showModal = false), (copied = false))}>
-    <div id="modal">
+    <div id="modal" transition:fly={{ y: 0, duration: 250 }}>
       <p>plantle {date}</p>
       {#each boardShare as boardShareRow}
         <div id="boardShareRow"><p>{boardShareRow}</p></div>
@@ -458,6 +460,18 @@
     justify-content: center;
   }
 
+  #keyboardRow1 button:hover,
+  #keyboardRow2 button:hover,
+  #keyboardRow3 button:hover {
+    background-color: #0084f6;
+  }
+
+  #keyboardRow1 button:active,
+  #keyboardRow2 button:active,
+  #keyboardRow3 button:active {
+    background-color: #000000;
+  }
+
   #keyboardAction {
     flex-flow: row;
     display: flex;
@@ -469,6 +483,14 @@
     color: white;
     border-radius: 0.2em;
     border: 0em;
+  }
+
+  #keyboardAction button:hover {
+    background-color: #1436bb;
+  }
+
+  #keyboardAction button:active {
+    background-color: #000000;
   }
 
   .sharedisabled,
@@ -493,6 +515,8 @@
     border-top: 0.15em solid white;
     padding-top: 0.8em;
     color: white;
+    font-size: 0.9em !important;
+    white-space: nowrap;
   }
 
   .correct {
@@ -513,14 +537,20 @@
   }
   #modal button {
     color: black;
-    /* padding: 0.5em; */
     min-width: 5em;
-    /* margin: 0em 1.8em 0em 1.8em; */
     color: white;
     background-color: #0084f6;
 
     border-radius: 0.2em;
     border: 0em;
+  }
+
+  #modal button:hover {
+    background-color: #1436bb;
+  }
+
+  #modal button:active {
+    background-color: #000000;
   }
 
   #boardShareRow p {
