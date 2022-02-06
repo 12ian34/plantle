@@ -271,8 +271,8 @@
 </div>
 <p id="footer">
   based on: <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a
-  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github:
-  <a href="https://github.com/12ian34">@12ian34</a>
+  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github (source):1
+  <a href="https://github.com/12ian34">12ian34/plantle</a>
 </p>
 
 <style>
