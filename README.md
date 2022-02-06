@@ -39,7 +39,7 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 - [x] restrict users from playing more than once per day (aside from clearing cache)
 - [x] link to github
 - [x] new colour scheme
-- [ ] allow convenient sharing
+- [x] allow convenient sharing
 
 ## v0.4
 

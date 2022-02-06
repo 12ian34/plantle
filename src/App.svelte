@@ -1,5 +1,7 @@
 <script>
   // don't be boring and look at my source code
+  import Modal from './Modal.svelte';
+  import { createEventDispatcher } from 'svelte';
   import Time from 'svelte-time';
   let date = new Date().toISOString().slice(0, 10);
   let dailyWord = getDailyWord(date);
@@ -12,7 +14,21 @@
   let presentLetters = [];
   let board;
   let boardState;
+  let boardShare;
   let lastPlayedDate;
+  let showModal = false;
+  let winState = false;
+  let boardShareString;
+  let copied = false;
+
+  const dispatch = createEventDispatcher();
+  const close = () => dispatch('close');
+
+  const boardStateShareMap = {
+    correct: '🟩',
+    present: '🟧',
+    '': '⬛',
+  };
 
   board = [
     ['', '', '', '', ''],
@@ -66,6 +82,12 @@
       }
       if (localStorage.getItem('boardState') != null) {
         boardState = getFromLocalStorage('boardState');
+      }
+      if (localStorage.getItem('winState') != null) {
+        winState = getFromLocalStorage('winState');
+      }
+      if (localStorage.getItem('boardShare') != null) {
+        boardShare = getFromLocalStorage('boardShare');
       }
     }
   }
@@ -147,18 +169,8 @@
     }
     // if there are 5 corrects in the array, win!
     if (count == 5) {
-      alert('🌽🌽🌽 congratulations 🌽🌽🌽');
-      saveToLocalStorage('success', 'true');
       return true;
-      // TODO: do something here to end game
     } else {
-      // otherwise, move on to next word and reset validation index
-      indexWord += 1;
-      indexLetter = 0;
-      validationIndex = 0;
-      saveToLocalStorage('indexWord', indexWord);
-      saveToLocalStorage('indexLetter', indexLetter);
-      saveToLocalStorage('validationIndex', validationIndex);
       return false;
     }
   }
@@ -170,6 +182,17 @@
     var body = await response.json();
     dailyWord = body.data[0].dailyWord;
     return dailyWord;
+  }
+
+  function mapBoard(boardState) {
+    var boardShare = boardState.map(function (nested) {
+      return nested
+        .map(function (element) {
+          return boardStateShareMap[element];
+        })
+        .join('');
+    });
+    return boardShare;
   }
 
   // on submit of complete word
@@ -198,15 +221,36 @@
         saveToLocalStorage('board', board);
         saveToLocalStorage('boardState', boardState);
         // then check if solution was reached and handle
-        checkSuccess('correct');
+        winState = checkSuccess('correct');
+        if (winState == true) {
+          alert('🌽🌽🌽 congratulations 🌽🌽🌽');
+          saveToLocalStorage('winState', winState);
+          boardShare = mapBoard(boardState);
+          saveToLocalStorage('boardShare', boardShare);
+        } else {
+          // otherwise, move on to next word and reset validation index
+          indexWord += 1;
+          indexLetter = 0;
+          validationIndex = 0;
+          saveToLocalStorage('indexWord', indexWord);
+          saveToLocalStorage('indexLetter', indexLetter);
+          saveToLocalStorage('validationIndex', validationIndex);
+        }
       }
     } else {
       alert('you must submit a full word!');
     }
   }
 
-  function toggle() {
-    window.document.body.classList.toggle('light-mode');
+  // function toggle() {
+  //   window.document.body.classList.toggle('light-mode');
+  // }
+  function copyText() {
+    boardShareString = `plantle ${date}\n${indexWord}/6\n${boardShare.join(
+      '\n'
+    )}\nhttps://plantle.netlify.app `;
+    navigator.clipboard.writeText(boardShareString);
+    copied = true;
   }
 </script>
 
@@ -266,14 +310,49 @@
 </div>
 <br />
 <div id="keyboardAction">
-  <button id="submit" on:click={() => submit(board[indexWord])}>submit</button>
-  <button id="clear" on:click={clear}>clear</button>
+  <button
+    class:submitenabled={winState == false}
+    class:submitdisabled={winState == true}
+    on:click={() => submit(board[indexWord])}>🚀 submit</button
+  >
+  <button
+    class:clearenabled={winState == false}
+    class:cleardisabled={winState == true}
+    on:click={clear}
+  >
+    ♻ clear</button
+  >
+  <button
+    class:sharedisabled={winState == false}
+    class:shareenabled={winState == true}
+    on:click={() => (showModal = true)}>📤 &nbsp;share results...</button
+  >
 </div>
 <p id="footer">
   based on: <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a
-  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github (source):1
+  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github (source):
   <a href="https://github.com/12ian34">12ian34/plantle</a>
 </p>
+
+{#if showModal}
+  <Modal on:close={() => ((showModal = false), (copied = false))}>
+    <div id="modal">
+      <p>plantle {date}</p>
+      {#each boardShare as boardShareRow}
+        <div id="boardShareRow"><p>{boardShareRow}</p></div>
+      {/each}
+      <p>{indexWord + 1}/6</p>
+      <center
+        ><button on:click={copyText}
+          >{copied === false
+            ? '📋 copy result to clipboard...'
+            : '✔️ copied!'}</button
+        ></center
+      >
+      <p>click/tap outside to close</p>
+    </div>
+  </Modal>
+{/if}
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bitter&display=swap');
@@ -396,11 +475,21 @@
     border: 0em;
   }
 
-  #submit {
+  .sharedisabled,
+  .submitdisabled,
+  .cleardisabled {
+    display: none;
+  }
+
+  .shareenabled {
     background-color: #0084f6;
   }
 
-  #clear {
+  .submitenabled {
+    background-color: #0084f6;
+  }
+
+  .clearenabled {
     background-color: #ff6c1e;
   }
   #footer {
@@ -420,5 +509,30 @@
 
   .used {
     background-color: #b33111 !important;
+  }
+
+  #modal p {
+    color: black;
+    padding: 0.5em;
+  }
+
+  #modal {
+  }
+
+  #modal button {
+    color: black;
+    /* padding: 0.5em; */
+    min-width: 5em;
+    /* margin: 0em 1.8em 0em 1.8em; */
+    color: white;
+    background-color: #0084f6;
+
+    border-radius: 0.2em;
+    border: 0em;
+  }
+
+  #boardShareRow p {
+    letter-spacing: 0.08em;
+    padding: 0em;
   }
 </style>
