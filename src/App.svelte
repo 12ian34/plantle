@@ -246,9 +246,9 @@
   //   window.document.body.classList.toggle('light-mode');
   // }
   function copyText() {
-    boardShareString = `plantle ${date}\n${indexWord}/6\n${boardShare.join(
-      '\n'
-    )}\nhttps://plantle.netlify.app `;
+    boardShareString = `plantle ${date}\n\n${
+      indexWord + 1
+    }/6\n\n${boardShare.join('\n')}\n\nhttps://plantle.netlify.app `;
     navigator.clipboard.writeText(boardShareString);
     copied = true;
   }
