@@ -1,6 +1,5 @@
 <script>
   // don't be boring and look at my source code
-
   import Time from 'svelte-time';
   let date = new Date().toISOString().slice(0, 10);
   let dailyWord = getDailyWord(date);
@@ -212,16 +211,14 @@
 </script>
 
 <div class="nav-top">
-  <a href="https://plantle.netlify.app">plant-based word game</a>
-  <!-- <div class="nav-top-right">
-    <button on:click={toggle}>☀️</button>
-  </div> -->
+  <center
+    ><a href="https://plantle.netlify.app">plant-based word game</a>
+    <!-- <div class="nav-top-right"><button on:click={toggle}>☀️</button></div>-->
+  </center>
 </div>
-
 <p>guess any real word. solutions limited to:</p>
 <p>herbs/spices/fruit/veg/beans/shrooms</p>
 <p>plants/flowers/bushes/crops/trees</p>
-
 <div id="row">
   {#each Array(6) as _, i}
     <div id="wordRow">
@@ -236,9 +233,7 @@
     </div>
   {/each}
 </div>
-
 <br />
-
 <div id="keyboardRow1">
   {#each 'qwertyuiop'.split('') as letter}
     <button
@@ -249,7 +244,6 @@
     >
   {/each}
 </div>
-
 <div id="keyboardRow2">
   {#each 'asdfghjkl'.split('') as letter}
     <button
@@ -260,7 +254,6 @@
     >
   {/each}
 </div>
-
 <div id="keyboardRow3">
   {#each 'zxcvbnm'.split('') as letter}
     <button
@@ -271,39 +264,37 @@
     >
   {/each}
 </div>
-
 <br />
-
-<div class="keyboardAction">
-  <button on:click={clear}>clear</button>
-  <button on:click={() => submit(board[indexWord])}>submit</button>
+<div id="keyboardAction">
+  <button id="submit" on:click={() => submit(board[indexWord])}>submit</button>
+  <button id="clear" on:click={clear}>clear</button>
 </div>
+<p id="footer">github: <a href="https://github.com/12ian34">@12ian34</a></p>
 
 <style>
-  * {
-    /* margin: 0.2em 0.2em 0.2em 0.2em; */
-    /* padding: 0.2em; */
-    /* border: 0.5em 0.5em 0.5em 0.5em; */
-    /* outline: 0.5em 0.5em 0.5em 0.5em; */
-    /* font-size: 100%; */
-    /* vertical-align: baseline; */
-    /* background: transparent; */
-  }
-
+  @import url('https://fonts.googleapis.com/css2?family=Bitter&display=swap');
   .nav-top {
-    overflow: hidden;
-    border-bottom: 2px solid white;
+    /* overflow: hidden;
+    display: block; */
+    margin-top: -0.5em;
+    border-bottom: 0.15em solid white;
   }
   .nav-top a {
-    float: left;
+    /* float: left; */
     color: white;
     font-size: 1.5em;
+    text-align: center;
+    line-height: 1.5em;
+    text-decoration: none !important;
+    border-bottom: none !important;
   }
+
   /* .nav-top-right {
     float: right;
   } */
+
   :global(body) {
-    background-color: #031805;
+    background-color: #345938;
     color: #ffffff;
     transition: background-color 0.3s;
   }
@@ -316,68 +307,114 @@
     display: block;
   }
 
-  /* #selected {
-    background-color: #286f35;
-  } */
-
+  p,
+  a,
+  button {
+    font-family: 'Bitter', serif;
+    font-size: 1em;
+    text-align: center;
+  }
   p {
     line-height: 20%;
-    font-size: 1em;
   }
+
+  a:link {
+    color: white;
+    border-bottom: 0.15em solid white;
+  }
+
+  a:visited {
+    color: #ff6c1e;
+    border-bottom: 0.15em solid white;
+  }
+
+  a:hover {
+    color: #0084f6;
+    text-decoration: none;
+  }
+
+  a:active {
+    color: yellow;
+    background-color: transparent;
+  }
+
   #wordRow {
     font-size: 1.5em;
-    display: grid;
-    grid-template-columns: repeat(5, 2.5em);
-    max-width: 50em;
-    grid-template-rows: repeat(1, 2.5em);
-    grid-gap: 0.1em;
     color: green;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
   }
 
   #wordRow button {
-    background-color: #112704;
+    background-color: #15250e;
     color: white;
-    border-radius: 8px;
-    border: 0px;
+    border-radius: 0.2em;
+    border: 0em;
+    margin: 0.05em;
+    min-width: 2em;
+    min-height: 2em;
+    justify-content: center;
   }
 
   #keyboardRow1,
   #keyboardRow2,
   #keyboardRow3 {
-    display: grid;
-    grid-template-columns: repeat(10, 2em);
-    grid-template-rows: repeat(1, 3em);
-    grid-gap: 0.4em;
-    max-width: 100%;
     color: white;
-  }
-
-  .correct {
-    background-color: green !important;
-  }
-
-  .present {
-    background-color: rgba(255, 166, 0, 0.741) !important;
-  }
-
-  .used {
-    background-color: rgb(79, 16, 0) !important;
+    padding: 0.15em;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
   }
 
   #keyboardRow1 button,
   #keyboardRow2 button,
   #keyboardRow3 button {
-    background-color: #6a6a6a;
+    background-color: #15250e;
+    min-width: 2em;
     color: white;
-    border-radius: 8px;
-    border: 0px;
+    border-radius: 0.2em;
+    border: 0em;
+    margin: 0.15em;
+    justify-content: center;
   }
 
-  #keyboardRow2 {
-    margin-left: 1.1em;
+  #keyboardAction {
+    flex-flow: row;
+    display: flex;
+    justify-content: center;
+  }
+  #keyboardAction button {
+    min-width: 5em;
+    margin: 0em 1.8em 0em 1.8em;
+    color: white;
+    border-radius: 0.2em;
+    border: 0em;
   }
 
-  #keyboardRow3 {
-    margin-left: 3.5em;
+  #submit {
+    background-color: #0084f6;
+  }
+
+  #clear {
+    background-color: #ff6c1e;
+  }
+  #footer {
+    margin-top: 0.8em;
+    border-top: 0.15em solid white;
+    padding-top: 0.8em;
+    color: white;
+  }
+
+  .correct {
+    background-color: #048a04 !important;
+  }
+
+  .present {
+    background-color: #ffa600bd !important;
+  }
+
+  .used {
+    background-color: #b33111 !important;
   }
 </style>
