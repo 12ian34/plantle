@@ -60,3 +60,7 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 # screenshot
 
 ![plantle](files/2022-02-08_02-20.png 'plantle')
+
+# disclaimer
+
+This repository is open sourced for learning purposes only. It is not for profit, neither do I claim any ownership of the Wordle trademark. The owner of the "official" Wordle owns all applicable rights to that game. 
