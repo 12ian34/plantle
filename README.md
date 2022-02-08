@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/2c36d7ba-5f25-4840-a2fd-c27d5d2b3736/deploy-status)](https://app.netlify.com/sites/plantle/deploys)
 
-# plantle v0.3
+# plantle v0.4
 
 ![plantle](public/favicon.png 'plantle')
 
@@ -21,14 +21,16 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 
 # todo
 
-## v0.4
+## v0.5
 
-- [ ] statistics
-- [ ] category based hints
-- [ ] design overhaul
 - [ ] improve responsiveness
 - [ ] add more words to supabase table
+- [ ] category based hints
 - [ ] improve logging/monitoring
+
+## v0.4
+
+- [x] player statistics
 
 ## v0.3
 
@@ -37,6 +39,7 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 - [x] restrict users from playing more than once per day (aside from clearing cache)
 - [x] link to github
 - [x] new colour scheme
+- [x] design overhaul
 - [x] allow convenient sharing
 
 ## v0.2
@@ -56,4 +59,4 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 
 # screenshot
 
-![plantle](files/2022-02-06-2026.png 'plantle')
+![plantle](files/2022-02-08_02-20.png 'plantle')

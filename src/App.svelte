@@ -421,13 +421,6 @@
         <div id="boardShareRow"><p>{boardShareRow}</p></div>
       {/each}
       <p>{indexWord + 1}/6</p>
-      <center
-        ><button aria-label="copy" on:click={copyText}
-          >{copied === false
-            ? '📋 copy result to clipboard...'
-            : '✔️ copied!'}</button
-        ></center
-      >
       <p class="stats">
         played: {stats.played} | won: {stats.won}
       </p>
@@ -435,6 +428,13 @@
         average guesses: {stats.average}
         {averageChange}
       </p>
+      <center
+        ><button aria-label="copy" on:click={copyText}
+          >{copied === false
+            ? '📋 copy result to clipboard...'
+            : '✔️ copied!'}</button
+        ></center
+      >
       <p>click/tap outside to close</p>
     </div>
   </Modal>
