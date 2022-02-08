@@ -6,7 +6,7 @@
 
   let date = new Date().toISOString().slice(0, 10);
   // date below for debugging
-  // let date = '2022-02-08';
+  // let date = '2022-02-09';
   let indexWord = 0;
   let indexLetter = 0;
   let validationIndex = 0;
@@ -27,6 +27,8 @@
     won: 0,
     average: 0,
   };
+  let averageChange;
+  let oldAverage;
 
   const boardStateShareMap = {
     correct: '🟩',
@@ -101,8 +103,12 @@
     }
     if (localStorage.getItem('stats')) {
       stats = getFromLocalStorage('stats');
+      if (stats.averageChange) {
+        averageChange = stats.averageChange;
+      }
     }
   }
+  console.log(averageChange);
 
   // fetch word based on today's date
   async function getDailyWord(date) {
@@ -231,8 +237,20 @@
 
     stats.played++;
     let guesses = stats.history.reduce((total, obj) => obj.guesses + total, 0);
+    oldAverage = stats.average;
     stats.average = Math.round((guesses / stats.played) * 10) / 10;
-
+    if (oldAverage > 0) {
+      if (oldAverage > stats.average) {
+        averageChange = '📉';
+      } else if (oldAverage < stats.average) {
+        averageChange = '📈';
+      } else {
+        averageChange = '↔️';
+      }
+    } else {
+      averageChange = '↔️';
+    }
+    stats.averageChange = averageChange;
     saveToLocalStorage('stats', stats);
 
     return stats;
@@ -300,9 +318,9 @@
   function copyText() {
     boardShareString = `plantle ${date}\n${indexWord + 1}/6\n${boardShare.join(
       '\n'
-    )}\nplayed: ${stats.played} | won: ${stats.won} | average: ${
+    )}\nplayed: ${stats.played} | won: ${stats.won}\naverage guesses: ${
       stats.average
-    }\nhttps://plantle.netlify.app `;
+    } ${averageChange}\nhttps://plantle.netlify.app `;
     navigator.clipboard.writeText(boardShareString);
     copied = true;
   }
@@ -410,8 +428,12 @@
             : '✔️ copied!'}</button
         ></center
       >
-      <p>
-        played: {stats.played} | won: {stats.won} | average: {stats.average}
+      <p class="stats">
+        played: {stats.played} | won: {stats.won}
+      </p>
+      <p class="stats">
+        average guesses: {stats.average}
+        {averageChange}
       </p>
       <p>click/tap outside to close</p>
     </div>
@@ -603,6 +625,11 @@
     color: black;
     padding: 0.5em;
   }
+
+  .stats {
+    line-height: 0px !important;
+  }
+
   #modal button {
     color: black;
     min-width: 5em;
