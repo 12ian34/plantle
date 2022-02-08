@@ -5,7 +5,8 @@
   import { fly } from 'svelte/transition';
 
   let date = new Date().toISOString().slice(0, 10);
-  let dailyWord = getDailyWord(date);
+  // date below for debugging
+  // let date = '2022-02-08';
   let indexWord = 0;
   let indexLetter = 0;
   let validationIndex = 0;
@@ -13,14 +14,19 @@
   let usedLetters = [];
   let correctLetters = [];
   let presentLetters = [];
-  let board;
-  let boardState;
   let boardShare;
+  let boardShareString;
   let lastPlayedDate;
   let showModal = false;
   let winState = false;
-  let boardShareString;
   let copied = false;
+  let dailyWord = getDailyWord(date);
+  let stats = {
+    history: [],
+    played: 0,
+    won: 0,
+    average: 0,
+  };
 
   const boardStateShareMap = {
     correct: '🟩',
@@ -28,7 +34,7 @@
     '': '⬛',
   };
 
-  board = [
+  let board = [
     ['', '', '', '', ''],
     ['', '', '', '', ''],
     ['', '', '', '', ''],
@@ -37,7 +43,7 @@
     ['', '', '', '', ''],
   ];
 
-  boardState = [
+  let boardState = [
     ['', '', '', '', ''],
     ['', '', '', '', ''],
     ['', '', '', '', ''],
@@ -47,52 +53,78 @@
   ];
 
   // check if played before
-  if (localStorage.getItem('lastPlayedDate') != null) {
+  if (localStorage.getItem('lastPlayedDate')) {
     // if yes, get last played date
     lastPlayedDate = getFromLocalStorage('lastPlayedDate');
+    console.log(`last played: ${lastPlayedDate}`);
     // check if it is the same day
     if (date == lastPlayedDate) {
       // if yes, get data if present
       // getting from localStorage if present
-      if (localStorage.getItem('board') != null) {
+      console.log(`(today)`);
+
+      if (localStorage.getItem('board')) {
         board = getFromLocalStorage('board');
       }
-      if (localStorage.getItem('indexWord') != null) {
+      if (localStorage.getItem('indexWord')) {
         indexWord = getFromLocalStorage('indexWord');
       }
-      if (localStorage.getItem('indexLetter') != null) {
+      if (localStorage.getItem('indexLetter')) {
         indexLetter = getFromLocalStorage('indexLetter');
       }
-      if (localStorage.getItem('validationIndex') != null) {
+      if (localStorage.getItem('validationIndex')) {
         validationIndex = getFromLocalStorage('validationIndex');
       }
-      if (localStorage.getItem('wordString') != null) {
+      if (localStorage.getItem('wordString')) {
         wordString = getFromLocalStorage('wordString');
       }
-      if (localStorage.getItem('usedLetters') != null) {
+      if (localStorage.getItem('usedLetters')) {
         usedLetters = getFromLocalStorage('usedLetters');
       }
-      if (localStorage.getItem('correctLetters') != null) {
+      if (localStorage.getItem('correctLetters')) {
         correctLetters = getFromLocalStorage('correctLetters');
       }
-      if (localStorage.getItem('presentLetters') != null) {
+      if (localStorage.getItem('presentLetters')) {
         presentLetters = getFromLocalStorage('presentLetters');
       }
-      if (localStorage.getItem('boardState') != null) {
+      if (localStorage.getItem('boardState')) {
         boardState = getFromLocalStorage('boardState');
       }
-      if (localStorage.getItem('winState') != null) {
+      if (localStorage.getItem('winState')) {
         winState = getFromLocalStorage('winState');
       }
-      if (localStorage.getItem('boardShare') != null) {
+      if (localStorage.getItem('boardShare')) {
         boardShare = getFromLocalStorage('boardShare');
       }
+    } else {
+      console.log(`date: ${date}`);
+    }
+    if (localStorage.getItem('stats')) {
+      stats = getFromLocalStorage('stats');
     }
   }
-  lastPlayedDate = date;
-  saveToLocalStorage('lastPlayedDate', lastPlayedDate);
+
+  // fetch word based on today's date
+  async function getDailyWord(date) {
+    const requestUrl = `/.netlify/functions/getWord?date=${date}`;
+    var response = await fetch(requestUrl);
+    var body = await response.json();
+    dailyWord = body.data[0].dailyWord;
+    if (dailyWord == wordString) {
+      console.log('dailyWord == wordString');
+      winState = true;
+      console.log(`win state: ${winState}`);
+    } else {
+      console.log('dailyWord != wordString');
+      winState = false;
+      console.log(`win state: ${winState}`);
+    }
+    return dailyWord;
+  }
 
   function getFromLocalStorage(key) {
+    // for debugging
+    // console.log(`${key}: ${JSON.parse(localStorage.getItem(key))}`);
     return JSON.parse(localStorage.getItem(key));
   }
 
@@ -173,15 +205,6 @@
     }
   }
 
-  // fetch word based on today's date
-  async function getDailyWord(date) {
-    const requestUrl = `/.netlify/functions/getWord?date=${date}`;
-    var response = await fetch(requestUrl);
-    var body = await response.json();
-    dailyWord = body.data[0].dailyWord;
-    return dailyWord;
-  }
-
   function mapBoard(boardState) {
     var boardShare = boardState.map(function (nested) {
       return nested
@@ -191,6 +214,28 @@
         .join('');
     });
     return boardShare;
+  }
+
+  function saveStats(stats, winState) {
+    if (winState == true) {
+      stats.history.push({
+        date: date,
+        winState: winState,
+        guesses: indexWord + 1,
+      });
+      stats.won++;
+    }
+    if (winState == false) {
+      stats.history.push({ date: date, winState: winState });
+    }
+
+    stats.played++;
+    let guesses = stats.history.reduce((total, obj) => obj.guesses + total, 0);
+    stats.average = Math.round((guesses / stats.played) * 10) / 10;
+
+    saveToLocalStorage('stats', stats);
+
+    return stats;
   }
 
   // on submit of complete word
@@ -225,6 +270,9 @@
           saveToLocalStorage('winState', winState);
           boardShare = mapBoard(boardState);
           saveToLocalStorage('boardShare', boardShare);
+          validationIndex = 0;
+          saveToLocalStorage('validationIndex', validationIndex);
+          stats = saveStats(stats, winState);
         } else {
           // otherwise, move on to next word and reset validation index
           indexWord += 1;
@@ -233,20 +281,28 @@
           saveToLocalStorage('indexWord', indexWord);
           saveToLocalStorage('indexLetter', indexLetter);
           saveToLocalStorage('validationIndex', validationIndex);
+          if (indexWord == 6) {
+            // game over
+            stats = saveStats(stats, winState);
+          }
         }
       }
     } else {
       alert('you must submit a full word!');
     }
+    lastPlayedDate = date;
+    saveToLocalStorage('lastPlayedDate', lastPlayedDate);
   }
 
   // function toggle() {
   //   window.document.body.classList.toggle('light-mode');
   // }
   function copyText() {
-    boardShareString = `plantle ${date}\n\n${
-      indexWord + 1
-    }/6\n\n${boardShare.join('\n')}\n\nhttps://plantle.netlify.app `;
+    boardShareString = `plantle ${date}\n${indexWord + 1}/6\n${boardShare.join(
+      '\n'
+    )}\nplayed: ${stats.played} | won: ${stats.won} | average: ${
+      stats.average
+    }\nhttps://plantle.netlify.app `;
     navigator.clipboard.writeText(boardShareString);
     copied = true;
   }
@@ -266,6 +322,7 @@
     <div id="wordRow">
       {#each Array(5) as _, j}
         <button
+          aria-label="board tile"
           id:selected={indexWord === i}
           class:correct={boardState[i][j] === 'correct'}
           class:present={boardState[i][j] === 'present'}
@@ -279,6 +336,7 @@
 <div id="keyboardRow1">
   {#each 'qwertyuiop'.split('') as letter}
     <button
+      aria-label="keyboard row 1"
       on:click={() => enter(letter)}
       class:correct={correctLetters.includes(letter)}
       class:present={presentLetters.includes(letter)}
@@ -289,6 +347,7 @@
 <div id="keyboardRow2">
   {#each 'asdfghjkl'.split('') as letter}
     <button
+      aria-label="keyboard row 2"
       on:click={() => enter(letter)}
       class:correct={correctLetters.includes(letter)}
       class:present={presentLetters.includes(letter)}
@@ -299,6 +358,7 @@
 <div id="keyboardRow3">
   {#each 'zxcvbnm'.split('') as letter}
     <button
+      aria-label="keyboard row 3"
       on:click={() => enter(letter)}
       class:correct={correctLetters.includes(letter)}
       class:present={presentLetters.includes(letter)}
@@ -309,11 +369,13 @@
 <br />
 <div id="keyboardAction">
   <button
+    aria-label="submit"
     class:submitenabled={winState == false}
     class:submitdisabled={winState == true}
     on:click={() => submit(board[indexWord])}>🚀 submit</button
   >
   <button
+    aria-label="clear"
     class:clearenabled={winState == false}
     class:cleardisabled={winState == true}
     on:click={clear}
@@ -321,6 +383,7 @@
     ♻ clear</button
   >
   <button
+    aria-label="share"
     class:sharedisabled={winState == false}
     class:shareenabled={winState == true}
     on:click={() => (showModal = true)}>📤 &nbsp;share results...</button
@@ -341,12 +404,15 @@
       {/each}
       <p>{indexWord + 1}/6</p>
       <center
-        ><button on:click={copyText}
+        ><button aria-label="copy" on:click={copyText}
           >{copied === false
             ? '📋 copy result to clipboard...'
             : '✔️ copied!'}</button
         ></center
       >
+      <p>
+        played: {stats.played} | won: {stats.won} | average: {stats.average}
+      </p>
       <p>click/tap outside to close</p>
     </div>
   </Modal>
@@ -463,13 +529,13 @@
   #keyboardRow1 button:hover,
   #keyboardRow2 button:hover,
   #keyboardRow3 button:hover {
-    background-color: #0084f6;
+    background-color: #0084f6 !important;
   }
 
   #keyboardRow1 button:active,
   #keyboardRow2 button:active,
   #keyboardRow3 button:active {
-    background-color: #000000;
+    background-color: #000000 !important;
   }
 
   #keyboardAction {
@@ -480,13 +546,15 @@
   #keyboardAction button {
     min-width: 5em;
     margin: 0em 1.8em 0em 1.8em;
-    color: white;
+    color: black;
     border-radius: 0.2em;
     border: 0em;
+    font-weight: bold;
   }
 
   #keyboardAction button:hover {
     background-color: #1436bb;
+    color: white;
   }
 
   #keyboardAction button:active {
