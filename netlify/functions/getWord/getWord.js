@@ -13,22 +13,32 @@ exports.handler = async function (event, context) {
   const { data, error } = await supabase
     .from('plantle')
     .select('dailyWord')
-    .eq('day', date);
+    .order('random')
+    .limit(1);
+
   if (error) {
     console.log(error);
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: error,
+        error: error.message,
       }),
     };
   }
-  if (data) {
+
+  if (data && data.length > 0) {
     console.log(data);
     return {
       statusCode: 200,
       body: JSON.stringify({
-        data: data,
+        data: data[0].dailyWord,
+      }),
+    };
+  } else {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({
+        error: 'No words found',
       }),
     };
   }
