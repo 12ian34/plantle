@@ -423,8 +423,8 @@
   >
 </div>
 <p id="footer">
-  based on: <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a
-  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;github (source):
+  made by: <a href="https://ianahuja.com">ian</a
+  >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;source:
   <a href="https://github.com/12ian34/plantle">12ian34/plantle</a>
 </p>
 
