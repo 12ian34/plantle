@@ -112,21 +112,25 @@
 
   // fetch word based on today's date
   async function getDailyWord(date) {
-    const requestUrl = `/.netlify/functions/getWord?date=${date}`;
+  const requestUrl = `/.netlify/functions/getWord?date=${date}`;
+  try {
     var response = await fetch(requestUrl);
     var body = await response.json();
-    dailyWord = body.data[0].dailyWord;
-    if (dailyWord == wordString) {
-      console.log('dailyWord == wordString');
-      winState = true;
-      console.log(`win state: ${winState}`);
+    
+    if (body && body.data && body.data.length > 0) {
+      dailyWord = body.data[0].dailyWord;
     } else {
-      console.log('dailyWord != wordString');
-      winState = false;
-      console.log(`win state: ${winState}`);
+      console.log('No daily word found for the given date.');
+      dailyWord = ''; // or handle it as you see fit
     }
+
+    return dailyWord;
+  } catch (err) {
+    console.log('Error fetching daily word:', err);
+    dailyWord = ''; // Handle the error case
     return dailyWord;
   }
+}
 
   function getFromLocalStorage(key) {
     // for debugging
