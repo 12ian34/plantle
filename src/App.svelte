@@ -262,33 +262,38 @@
 
   // on submit of complete word
   async function submit(word) {
-    wordString = stringifyWord(word);
-    if (wordString.length == 5) {
-      // check word against dictionary
-      const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
+  wordString = stringifyWord(word);
+  if (wordString.length == 5) {
+    // Check word against dictionary
+    const requestUrl = `/.netlify/functions/dictionaryLookup?wordString=${wordString}`;
+    try {
       const response = await fetch(requestUrl);
-      if (response.statusText == 'Not Found') {
-        // word not found
-        alert(
-          "'" + wordString + "'" + ' not found in dictionary. try a real word!'
-        );
+      
+      // Handle different HTTP response codes
+      if (response.status === 404) {
+        // Word not found in dictionary
+        alert(`'${wordString}' not found in dictionary. Try a real word!`);
         clear();
-      } else if (response.status != 200) {
-        // other error
+      } else if (!response.ok) {
+        // Other types of errors (e.g., 500 or network issues)
         alert(
-          'something else went seriously wrong. please contact to fix, providing: the current time, the word you tried and what happened.'
+          'Something went wrong. Please contact support with details about the current time, the word you tried, and what happened.'
         );
       } else {
-        // word matched dictionary
-        // now check each letter against solution
+        // Word matched in dictionary
+        const responseData = await response.json();
+        
+        // Now check each letter against the solution
         word.forEach(validateWord);
-        // save state to localStorage]
+        
+        // Save state to localStorage
         saveToLocalStorage('board', board);
         saveToLocalStorage('boardState', boardState);
-        // then check if solution was reached and handle
+
+        // Then check if solution was reached and handle win state
         winState = checkSuccess('correct');
         if (winState == true) {
-          alert('🌽🌽🌽 congratulations 🌽🌽🌽');
+          alert('🌽🌽🌽 Congratulations! 🌽🌽🌽');
           saveToLocalStorage('winState', winState);
           boardShare = mapBoard(boardState);
           saveToLocalStorage('boardShare', boardShare);
@@ -296,25 +301,31 @@
           saveToLocalStorage('validationIndex', validationIndex);
           stats = saveStats(stats, winState);
         } else {
-          // otherwise, move on to next word and reset validation index
+          // Move on to the next word and reset validation index
           indexWord += 1;
           indexLetter = 0;
           validationIndex = 0;
           saveToLocalStorage('indexWord', indexWord);
           saveToLocalStorage('indexLetter', indexLetter);
           saveToLocalStorage('validationIndex', validationIndex);
+          
           if (indexWord == 6) {
-            // game over
+            // Game over
             stats = saveStats(stats, winState);
           }
         }
       }
-    } else {
-      alert('you must submit a full word!');
+    } catch (error) {
+      console.error('Error fetching from dictionaryLookup:', error);
+      alert('Error connecting to the dictionary lookup service.');
     }
-    lastPlayedDate = date;
-    saveToLocalStorage('lastPlayedDate', lastPlayedDate);
+  } else {
+    alert('You must submit a full word!');
   }
+
+  lastPlayedDate = date;
+  saveToLocalStorage('lastPlayedDate', lastPlayedDate);
+}
 
   // function toggle() {
   //   window.document.body.classList.toggle('light-mode');
