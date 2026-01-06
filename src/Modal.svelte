@@ -44,6 +44,10 @@
 <div
   class="modal-background"
   on:click={close}
+  on:keydown={(e) => e.key === 'Enter' && close()}
+  role="button"
+  tabindex="0"
+  aria-label="Close modal"
   transition:fly={{ y: 0, duration: 250 }}
   on:introstart
   on:outroend

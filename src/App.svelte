@@ -356,7 +356,7 @@
       {#each Array(5) as _, j}
         <button
           aria-label="board tile"
-          id:selected={indexWord === i}
+          class:selected={indexWord === i}
           class:correct={boardState[i][j] === 'correct'}
           class:present={boardState[i][j] === 'present'}
           class:used={boardState[i][j] === 'used'}>{board[i][j]}</button
