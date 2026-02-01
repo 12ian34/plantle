@@ -19,6 +19,18 @@ A plant-based word game, based on [Wordle (the original)](https://www.powerlangu
 - Supabase backend db for words
 - WordsAPI dictionary lookup
 
+# local env
+
+If you want to run the Netlify functions locally, copy `.env.example` to `.env` and set:
+
+- `SUPABASE_PLANTLE_PUBLIC_ANON_API_KEY`
+
+# tests
+
+```bash
+npm test
+```
+
 # todo
 
 ## v0.5
